@@ -6,6 +6,7 @@ const rateLimit = require("express-rate-limit");
 const dotenv = require("dotenv");
 
 const connectDB = require("./config/db");
+const authRoutes = require("./routes/auth.routes");
 
 dotenv.config();
 
@@ -37,6 +38,9 @@ app.use(
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+// Routes
+app.use("/api/auth", authRoutes);
 
 // Database
 connectDB();
