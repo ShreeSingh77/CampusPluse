@@ -7,7 +7,7 @@ const dotenv = require("dotenv");
 
 const connectDB = require("./config/db");
 const authRoutes = require("./routes/auth.routes");
-
+const announcementRoutes = require("./routes/announcement.routes");
 dotenv.config();
 
 const app = express();
@@ -41,7 +41,7 @@ app.use(cookieParser());
 
 // Routes
 app.use("/api/auth", authRoutes);
-
+app.use("/api/announcements", announcementRoutes);
 // Database
 connectDB();
 
@@ -52,6 +52,7 @@ app.get("/", (req, res) => {
     message: "CampusPulse API is running 🚀",
   });
 });
+
 
 // Server
 const PORT = process.env.PORT || 5000;
