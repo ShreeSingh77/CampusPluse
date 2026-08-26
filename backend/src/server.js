@@ -5,10 +5,13 @@ const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const dotenv = require("dotenv");
 
+
+const lostFoundRoutes = require("./routes/lostFound.routes");
 const connectDB = require("./config/db");
 const authRoutes = require("./routes/auth.routes");
 const announcementRoutes = require("./routes/announcement.routes");
 const eventRoutes = require("./routes/event.routes");
+
 dotenv.config();
 
 const app = express();
@@ -44,6 +47,10 @@ app.use(cookieParser());
 app.use("/api/auth", authRoutes);
 app.use("/api/announcements", announcementRoutes);
 app.use("/api/events", eventRoutes);
+app.use(
+  "/api/lost-found",
+  lostFoundRoutes
+);
 // Database
 connectDB();
 
