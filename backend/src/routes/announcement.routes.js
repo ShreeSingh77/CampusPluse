@@ -4,6 +4,7 @@ const {
   createAnnouncement,
   getAnnouncements,
   updateAnnouncement,
+ deleteAnnouncement,
 } = require("../controllers/announcement.controller");
 
 const { protect } = require("../middleware/auth.middleware");
@@ -31,5 +32,11 @@ router.put(
   protect,
   requireRole("admin", "super_admin", "staff"),
   updateAnnouncement
+);
+router.delete(
+  "/:id",
+  protect,
+  requireRole("admin", "super_admin", "staff"),
+  deleteAnnouncement
 );
 module.exports = router;

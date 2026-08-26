@@ -62,18 +62,81 @@ const createAnnouncement = async (req, res) => {
 
 const getAnnouncements = async (req, res) => {
   try {
-    const announcements = await Announcement.find({
+    const {
+      search,
+      category,
+      department,
+      priority,
+      page = 1,
+      limit = 10,
+    } = req.query;
+
+    const filter = {
       isPublished: true,
-    })
-      .populate("createdBy", "name email role")
-      .sort({
-        priorityScore: -1,
-        createdAt: -1,
-      });
+    };
+
+    // Search
+    if (search) {
+      filter.$or = [
+        {
+          title: {
+            $regex: search,
+            $options: "i",
+          },
+        },
+        {
+          description: {
+            $regex: search,
+            $options: "i",
+          },
+        },
+      ];
+    }
+
+    // Filters
+    if (category) {
+      filter.category = category;
+    }
+
+    if (department) {
+      filter.department = {
+        $in: [department, "all"],
+      };
+    }
+
+    if (priority) {
+      filter.priority = priority;
+    }
+
+    const pageNumber = Math.max(parseInt(page), 1);
+    const limitNumber = Math.min(
+      Math.max(parseInt(limit), 1),
+      50
+    );
+
+    const skip = (pageNumber - 1) * limitNumber;
+
+    const [announcements, total] =
+      await Promise.all([
+        Announcement.find(filter)
+          .populate("createdBy", "name email role")
+          .sort({
+            priorityScore: -1,
+            createdAt: -1,
+          })
+          .skip(skip)
+          .limit(limitNumber),
+
+        Announcement.countDocuments(filter),
+      ]);
 
     return res.status(200).json({
       success: true,
       count: announcements.length,
+      total,
+      page: pageNumber,
+      limit: limitNumber,
+      totalPages: Math.ceil(total / limitNumber),
       announcements,
     });
   } catch (error) {
@@ -156,8 +219,41 @@ const updateAnnouncement = async (req, res) => {
     });
   }
 };
+
+const deleteAnnouncement = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const announcement = await Announcement.findById(id);
+
+    if (!announcement) {
+      return res.status(404).json({
+        success: false,
+        message: "Announcement not found",
+      });
+    }
+
+    await Announcement.findByIdAndDelete(id);
+
+    return res.status(200).json({
+      success: true,
+      message: "Announcement deleted successfully",
+    });
+  } catch (error) {
+    console.error(
+      "Delete Announcement Error:",
+      error.message
+    );
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};
 module.exports = {
   createAnnouncement,
   getAnnouncements,
 updateAnnouncement,
+deleteAnnouncement,
 };
