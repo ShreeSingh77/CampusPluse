@@ -4,6 +4,9 @@ const User = require("../models/User");
 const {
   generateAccessToken,
   generateRefreshToken,
+   verifyRefreshToken,
+  hashToken,
+  verifyAccessToken,
 } = require("../utils/token");
 
 const register = async (req, res) => {
@@ -111,8 +114,12 @@ const login = async (req, res) => {
     const accessToken = generateAccessToken(user);
     const refreshToken = generateRefreshToken(user);
 
-    user.lastLogin = new Date();
-    await user.save();
+   const refreshTokenHash = hashToken(refreshToken);
+
+user.refreshTokenHash = refreshTokenHash;
+user.lastLogin = new Date();
+
+await user.save();
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
@@ -158,8 +165,116 @@ const getMe = async (req, res) => {
     },
   });
 };
+const refreshAccessToken = async (req, res) => {
+  try {
+    const refreshToken = req.cookies.refreshToken;
+
+   
+
+    if (!refreshToken) {
+      return res.status(401).json({
+        success: false,
+        message: "Refresh token not found",
+      });
+    }
+
+    const decoded = verifyRefreshToken(refreshToken);
+
+    
+
+    const user = await User.findById(decoded.userId).select(
+      "+refreshTokenHash"
+    );
+
+
+    if (!user || !user.isActive || !user.refreshTokenHash) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid refresh session",
+      });
+    }
+
+    const incomingHash = hashToken(refreshToken);
+
+
+    if (incomingHash !== user.refreshTokenHash) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid refresh session",
+      });
+    }
+
+   const newAccessToken = generateAccessToken(user);
+const newRefreshToken = generateRefreshToken(user);
+
+const newRefreshTokenHash = hashToken(newRefreshToken);
+
+user.refreshTokenHash = newRefreshTokenHash;
+
+await user.save();
+
+res.cookie("refreshToken", newRefreshToken, {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+  maxAge: 7 * 24 * 60 * 60 * 1000,
+});
+
+return res.status(200).json({
+  success: true,
+  accessToken: newAccessToken,
+});
+  } catch (error) {
+    
+
+    return res.status(401).json({
+      success: false,
+      message: "Invalid or expired refresh token",
+    });
+  }
+};
+const logout = async (req, res) => {
+  try {
+    const refreshToken = req.cookies.refreshToken;
+
+    if (refreshToken) {
+      try {
+        const decoded = verifyRefreshToken(refreshToken);
+
+        await User.findByIdAndUpdate(decoded.userId, {
+          $set: {
+            refreshTokenHash: null,
+          },
+        });
+      } catch (error) {
+        // Token already invalid/expired.
+        // Cookie will still be cleared.
+      }
+    }
+
+    res.clearCookie("refreshToken", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Logged out successfully",
+    });
+  } catch (error) {
+    
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};
 module.exports = {
   register,
   login,
   getMe,
+ refreshAccessToken,
+ logout,
 };
