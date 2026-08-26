@@ -8,6 +8,7 @@ const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 const authRoutes = require("./routes/auth.routes");
 const announcementRoutes = require("./routes/announcement.routes");
+const eventRoutes = require("./routes/event.routes");
 dotenv.config();
 
 const app = express();
@@ -42,6 +43,7 @@ app.use(cookieParser());
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/announcements", announcementRoutes);
+app.use("/api/events", eventRoutes);
 // Database
 connectDB();
 
