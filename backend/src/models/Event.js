@@ -68,6 +68,20 @@ const eventSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    checkInCode: {
+  type: String,
+  default: null,
+},
+
+isCheckInOpen: {
+  type: Boolean,
+  default: false,
+},
+
+checkInOpenedAt: {
+  type: Date,
+  default: null,
+},
 
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,

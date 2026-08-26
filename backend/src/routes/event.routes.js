@@ -5,6 +5,11 @@ const {
   getEvents,
   registerForEvent,
   getMyRegistrations,
+  markAttendance,
+  getEventAnalytics,
+  openEventCheckIn,
+  closeEventCheckIn,
+  checkInToEvent,
 } = require("../controllers/event.controller");
 
 const { protect } = require("../middleware/auth.middleware");
@@ -40,5 +45,41 @@ router.post(
   registerForEvent
 );
 
+router.post(
+  "/registrations/:id/attendance",
+  protect,
+  requireRole("student"),
+  markAttendance
+);
 
+router.get(
+  "/:id/analytics",
+  protect,
+  requireRole("admin", "super_admin", "staff"),
+  getEventAnalytics
+);
+
+// Admin / Staff → Open Check-in
+router.post(
+  "/:id/check-in/open",
+  protect,
+  requireRole("admin", "super_admin", "staff"),
+  openEventCheckIn
+);
+
+// Admin / Staff → Close Check-in
+router.post(
+  "/:id/check-in/close",
+  protect,
+  requireRole("admin", "super_admin", "staff"),
+  closeEventCheckIn
+);
+
+// Student → Check-in
+router.post(
+  "/:id/check-in",
+  protect,
+  requireRole("student"),
+  checkInToEvent
+);
 module.exports = router;
