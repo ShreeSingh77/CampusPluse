@@ -1,4 +1,5 @@
 const Complaint = require("../models/Complaint");
+const User = require("../models/User");
 const calculateComplaintPriority = require("../utils/complaintPriority");
 
 const createComplaint = async (req, res) => {
@@ -144,18 +145,31 @@ const assignComplaint = async (req, res) => {
         message: "staffId is required",
       });
     }
+const complaint = await Complaint.findById(id);
 
-    const complaint = await Complaint.findById(id);
+if (!complaint) {
+  return res.status(404).json({
+    success: false,
+    message: "Complaint not found",
+  });
+}
 
-    if (!complaint) {
-      return res.status(404).json({
-        success: false,
-        message: "Complaint not found",
-      });
-    }
+// Verify staff
+const staff = await User.findOne({
+  _id: staffId,
+  role: "staff",
+  isActive: true,
+});
 
-    complaint.assignedTo = staffId;
-    complaint.status = "assigned";
+if (!staff) {
+  return res.status(400).json({
+    success: false,
+    message: "Invalid or inactive staff member",
+  });
+}
+
+complaint.assignedTo = staff._id;
+complaint.status = "assigned";
 
     await complaint.save();
 

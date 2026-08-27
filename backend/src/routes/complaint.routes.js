@@ -22,7 +22,6 @@ const router = express.Router();
 // ==========================================
 // STUDENT → CREATE COMPLAINT
 // ==========================================
-
 router.post(
   "/",
   protect,
@@ -33,7 +32,6 @@ router.post(
 // ==========================================
 // STUDENT → MY COMPLAINTS
 // ==========================================
-
 router.get(
   "/my",
   protect,
@@ -44,7 +42,6 @@ router.get(
 // ==========================================
 // ADMIN / STAFF → ALL COMPLAINTS
 // ==========================================
-
 router.get(
   "/",
   protect,
@@ -57,9 +54,8 @@ router.get(
 );
 
 // ==========================================
-// ADMIN → COMPLAINT DETAILS
+// ADMIN / STAFF → COMPLAINT DETAILS
 // ==========================================
-
 router.get(
   "/:id",
   protect,
@@ -74,7 +70,6 @@ router.get(
 // ==========================================
 // ADMIN → ASSIGN COMPLAINT
 // ==========================================
-
 router.patch(
   "/:id/assign",
   protect,
@@ -86,9 +81,8 @@ router.patch(
 );
 
 // ==========================================
-// ADMIN → UPDATE STATUS
+// ADMIN / STAFF → UPDATE STATUS
 // ==========================================
-
 router.patch(
   "/:id/status",
   protect,
@@ -99,4 +93,5 @@ router.patch(
   ),
   updateComplaintStatus
 );
+
 module.exports = router;
