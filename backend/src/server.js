@@ -14,7 +14,7 @@ const authRoutes = require("./routes/auth.routes");
 const announcementRoutes = require("./routes/announcement.routes");
 const eventRoutes = require("./routes/event.routes");
 
-
+const notificationRoutes = require("./routes/notification.routes");
 const { startEscalationEngine } = require("./services/escalation.service");
 dotenv.config();
 
@@ -63,6 +63,12 @@ app.use(
 app.use(
   "/api/complaints",
   complaintRoutes
+);
+
+
+app.use(
+  "/api/notifications",
+  notificationRoutes
 );
 app.use("/api/users", userRoutes);
 // Database

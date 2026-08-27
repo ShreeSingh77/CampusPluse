@@ -213,6 +213,7 @@ const assignComplaint = async (req, res) => {
       });
     }
 
+    
     const complaint = await Complaint.findById(id);
 
     if (!complaint) {
@@ -320,6 +321,7 @@ const autoAssignComplaint = async (req, res) => {
       });
     }
 
+    
     complaint.assignedTo = staff._id;
     complaint.status = "assigned";
 

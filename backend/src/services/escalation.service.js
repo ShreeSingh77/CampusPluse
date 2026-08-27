@@ -1,6 +1,9 @@
 const cron = require("node-cron");
 const Complaint = require("../models/Complaint");
 
+const {
+  createEscalationNotifications,
+} = require("./notification.service");
 const processComplaintEscalations = async () => {
   try {
     const now = new Date();
@@ -29,11 +32,18 @@ const processComplaintEscalations = async () => {
     statusAtEscalation: complaint.status,
   });
 
-  await complaint.save();
+ await complaint.save();
 
-  console.log(
-    `🚨 Complaint escalated: ${complaint._id}`
-  );
+console.log(
+  `🚨 Complaint escalated: ${complaint._id}`
+);
+
+// Create notification for admins
+await createEscalationNotifications(complaint);
+
+console.log(
+  `🔔 Admin notification processed for: ${complaint._id}`
+);
 }
 
     console.log(
