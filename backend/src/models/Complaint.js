@@ -83,7 +83,10 @@ escalationLevel: {
   type: Number,
   default: 0,
 },
-
+escalationNextDeadline: {
+  type: Date,
+  default: null,
+},
 escalationHistory: [
   {
     level: {

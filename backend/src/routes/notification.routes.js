@@ -4,6 +4,8 @@ const {
   getMyNotifications,
   markNotificationAsRead,
   markAllNotificationsAsRead,
+  getUnreadNotificationCount,
+  deleteNotification,
 } = require("../controllers/notification.controller");
 
 const {
@@ -27,6 +29,11 @@ router.get(
   getMyNotifications
 );
 
+router.get(
+  "/unread-count",
+  protect,
+  getUnreadNotificationCount
+);
 // ==========================================
 // MARK ONE AS READ
 // ==========================================
@@ -48,5 +55,9 @@ router.patch(
   requireRole("admin", "super_admin"),
   markAllNotificationsAsRead
 );
-
+router.delete(
+  "/:id",
+  protect,
+  deleteNotification
+);
 module.exports = router;
