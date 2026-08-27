@@ -42,6 +42,7 @@ department: {
   ref: "Department",
   required: true,
 },
+
     priority: {
       type: String,
       enum: ["low", "medium", "high", "urgent"],
@@ -82,6 +83,30 @@ escalationLevel: {
   type: Number,
   default: 0,
 },
+
+escalationHistory: [
+  {
+    level: {
+      type: Number,
+      required: true,
+    },
+
+    reason: {
+      type: String,
+      required: true,
+    },
+
+    escalatedAt: {
+      type: Date,
+      required: true,
+    },
+
+    statusAtEscalation: {
+      type: String,
+      required: true,
+    },
+  },
+],
     status: {
       type: String,
       enum: [
