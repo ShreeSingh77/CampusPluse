@@ -4,6 +4,7 @@ const {
   createComplaint,
   getMyComplaints,
   getAllComplaints,
+  getAssignedComplaints,
   assignComplaint,
   updateComplaintStatus,
   getComplaintById,
@@ -53,6 +54,12 @@ router.get(
   getAllComplaints
 );
 
+router.get(
+  "/assigned",
+  protect,
+  requireRole("staff"),
+  getAssignedComplaints
+);
 // ==========================================
 // ADMIN / STAFF → COMPLAINT DETAILS
 // ==========================================
@@ -79,6 +86,7 @@ router.patch(
   ),
   assignComplaint
 );
+
 
 // ==========================================
 // ADMIN / STAFF → UPDATE STATUS

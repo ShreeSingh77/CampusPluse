@@ -130,6 +130,41 @@ const getAllComplaints = async (req, res) => {
   }
 };
 
+const getAssignedComplaints = async (req, res) => {
+  try {
+    const complaints = await Complaint.find({
+      assignedTo: req.user._id,
+    })
+      .populate(
+        "reportedBy",
+        "name email role"
+      )
+      .populate(
+        "assignedTo",
+        "name email role"
+      )
+      .sort({
+        priorityScore: -1,
+        createdAt: -1,
+      });
+
+    return res.status(200).json({
+      success: true,
+      count: complaints.length,
+      complaints,
+    });
+  } catch (error) {
+    console.error(
+      "Get Assigned Complaints Error:",
+      error.message
+    );
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};
 // ==========================================
 // ADMIN → ASSIGN COMPLAINT
 // ==========================================
@@ -237,15 +272,47 @@ const updateComplaintStatus = async (req, res) => {
       });
     }
 
-    complaint.status = status;
 
-    if (adminNote) {
-      complaint.adminNote = adminNote;
-    }
+    // Staff can update only complaints assigned to them
+if (
+  req.user.role === "staff" &&
+  (!complaint.assignedTo ||
+    complaint.assignedTo.toString() !==
+      req.user._id.toString())
+) {
+  return res.status(403).json({
+    success: false,
+    message:
+      "You can update only complaints assigned to you",
+  });
+}
+  const allowedTransitions = {
+  submitted: ["under_review", "assigned", "rejected"],
+  under_review: ["assigned", "rejected"],
+  assigned: ["in_progress", "rejected"],
+  in_progress: ["resolved", "rejected"],
+  resolved: [],
+  rejected: [],
+};
 
-    if (status === "resolved") {
-      complaint.resolvedAt = new Date();
-    }
+if (!allowedTransitions[complaint.status]?.includes(status)) {
+  return res.status(400).json({
+    success: false,
+    message: `Cannot change complaint status from ${complaint.status} to ${status}`,
+  });
+}
+
+complaint.status = status;
+
+if (adminNote) {
+  complaint.adminNote = adminNote;
+}
+
+if (status === "resolved") {
+  complaint.resolvedAt = new Date();
+} else {
+  complaint.resolvedAt = null;
+}
 
     await complaint.save();
 
@@ -314,6 +381,7 @@ module.exports = {
   createComplaint,
   getMyComplaints,
   getAllComplaints,
+  getAssignedComplaints,
   assignComplaint,
   updateComplaintStatus,
   getComplaintById,
