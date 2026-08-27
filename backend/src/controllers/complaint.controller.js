@@ -1,6 +1,8 @@
 const Complaint = require("../models/Complaint");
 const User = require("../models/User");
 const calculateComplaintPriority = require("../utils/complaintPriority");
+const findAvailableStaff = require("../utils/assignComplaintStaff");
+
 
 const createComplaint = async (req, res) => {
   try {
@@ -24,21 +26,51 @@ const createComplaint = async (req, res) => {
       });
     }
 
+    // Student department validation
+    if (!req.user.department) {
+      return res.status(400).json({
+        success: false,
+        message: "Student department is not assigned",
+      });
+    }
+
+    // Calculate complaint priority
     const priorityData = calculateComplaintPriority({
       title,
       description,
       category,
     });
 
+    // SLA based on priority
+    const slaHoursMap = {
+      urgent: 6,
+      high: 24,
+      medium: 48,
+      low: 72,
+    };
+
+    const slaHours =
+      slaHoursMap[priorityData.priority] || 72;
+
+    const slaDeadline = new Date(
+      Date.now() + slaHours * 60 * 60 * 1000
+    );
+
+    // Create complaint
     const complaint = await Complaint.create({
       title,
       description,
       category,
       location,
 
+      department: req.user.department,
+
       priority: priorityData.priority,
       priorityScore: priorityData.priorityScore,
       priorityReason: priorityData.priorityReason,
+
+      slaHours,
+      slaDeadline,
 
       reportedBy: req.user._id,
     });
@@ -180,31 +212,46 @@ const assignComplaint = async (req, res) => {
         message: "staffId is required",
       });
     }
-const complaint = await Complaint.findById(id);
 
-if (!complaint) {
-  return res.status(404).json({
-    success: false,
-    message: "Complaint not found",
-  });
-}
+    const complaint = await Complaint.findById(id);
 
-// Verify staff
-const staff = await User.findOne({
-  _id: staffId,
-  role: "staff",
-  isActive: true,
-});
+    if (!complaint) {
+      return res.status(404).json({
+        success: false,
+        message: "Complaint not found",
+      });
+    }
 
-if (!staff) {
-  return res.status(400).json({
-    success: false,
-    message: "Invalid or inactive staff member",
-  });
-}
+    // Verify staff
+    const staff = await User.findOne({
+      _id: staffId,
+      role: "staff",
+      isActive: true,
+    });
 
-complaint.assignedTo = staff._id;
-complaint.status = "assigned";
+    if (!staff) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid or inactive staff member",
+      });
+    }
+
+    // Department-aware assignment
+    if (
+      !staff.department ||
+      staff.department.toString() !==
+        complaint.department.toString()
+    ) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Staff member does not belong to the complaint department",
+      });
+    }
+
+    // Assign complaint
+    complaint.assignedTo = staff._id;
+    complaint.status = "assigned";
 
     await complaint.save();
 
@@ -212,11 +259,15 @@ complaint.status = "assigned";
       await Complaint.findById(id)
         .populate(
           "reportedBy",
-          "name email role"
+          "name email role department"
         )
         .populate(
           "assignedTo",
-          "name email role"
+          "name email role department"
+        )
+        .populate(
+          "department",
+          "name code description"
         );
 
     return res.status(200).json({
@@ -237,6 +288,75 @@ complaint.status = "assigned";
   }
 };
 
+const autoAssignComplaint = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const complaint = await Complaint.findById(id);
+
+    if (!complaint) {
+      return res.status(404).json({
+        success: false,
+        message: "Complaint not found",
+      });
+    }
+
+    if (complaint.assignedTo) {
+      return res.status(400).json({
+        success: false,
+        message: "Complaint is already assigned",
+      });
+    }
+
+    const staff = await findAvailableStaff(
+      complaint.department
+    );
+
+    if (!staff) {
+      return res.status(404).json({
+        success: false,
+        message:
+          "No active staff found for this department",
+      });
+    }
+
+    complaint.assignedTo = staff._id;
+    complaint.status = "assigned";
+
+    await complaint.save();
+
+    const updatedComplaint =
+      await Complaint.findById(id)
+        .populate(
+          "reportedBy",
+          "name email role department"
+        )
+        .populate(
+          "assignedTo",
+          "name email role department"
+        )
+        .populate(
+          "department",
+          "name code description"
+        );
+
+    return res.status(200).json({
+      success: true,
+      message: "Complaint automatically assigned successfully",
+      complaint: updatedComplaint,
+    });
+  } catch (error) {
+    console.error(
+      "Auto Assign Complaint Error:",
+      error.message
+    );
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};
 // ==========================================
 // ADMIN → UPDATE COMPLAINT STATUS
 // ==========================================
@@ -383,6 +503,7 @@ module.exports = {
   getAllComplaints,
   getAssignedComplaints,
   assignComplaint,
+  autoAssignComplaint,
   updateComplaintStatus,
   getComplaintById,
 };

@@ -6,6 +6,7 @@ const {
   getAllComplaints,
   getAssignedComplaints,
   assignComplaint,
+  autoAssignComplaint,
   updateComplaintStatus,
   getComplaintById,
 } = require("../controllers/complaint.controller");
@@ -86,7 +87,18 @@ router.patch(
   ),
   assignComplaint
 );
-
+// ==========================================
+// ADMIN → AUTO ASSIGN COMPLAINT
+// ==========================================
+router.patch(
+  "/:id/auto-assign",
+  protect,
+  requireRole(
+    "admin",
+    "super_admin"
+  ),
+  autoAssignComplaint
+);
 
 // ==========================================
 // ADMIN / STAFF → UPDATE STATUS

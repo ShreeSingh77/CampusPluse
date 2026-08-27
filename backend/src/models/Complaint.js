@@ -37,7 +37,11 @@ const complaintSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-
+department: {
+  type: mongoose.Schema.Types.ObjectId,
+  ref: "Department",
+  required: true,
+},
     priority: {
       type: String,
       enum: ["low", "medium", "high", "urgent"],
@@ -54,6 +58,30 @@ const complaintSchema = new mongoose.Schema(
       default: "",
     },
 
+    slaHours: {
+  type: Number,
+  default: 72,
+},
+
+slaDeadline: {
+  type: Date,
+  default: null,
+},
+
+isEscalated: {
+  type: Boolean,
+  default: false,
+},
+
+escalatedAt: {
+  type: Date,
+  default: null,
+},
+
+escalationLevel: {
+  type: Number,
+  default: 0,
+},
     status: {
       type: String,
       enum: [
