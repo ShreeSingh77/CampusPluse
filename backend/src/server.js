@@ -5,6 +5,8 @@ const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const dotenv = require("dotenv");
 
+const userRoutes = require("./routes/user.routes");
+const complaintRoutes = require("./routes/complaint.routes");
 const lostFoundClaimRoutes = require("./routes/lostFoundClaim.routes");
 const lostFoundRoutes = require("./routes/lostFound.routes");
 const connectDB = require("./config/db");
@@ -55,6 +57,12 @@ app.use(
   "/api/lost-found/claims",
   lostFoundClaimRoutes
 );
+
+app.use(
+  "/api/complaints",
+  complaintRoutes
+);
+app.use("/api/users", userRoutes);
 // Database
 connectDB();
 

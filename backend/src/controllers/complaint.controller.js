@@ -129,8 +129,178 @@ const getAllComplaints = async (req, res) => {
   }
 };
 
+// ==========================================
+// ADMIN → ASSIGN COMPLAINT
+// ==========================================
+
+const assignComplaint = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { staffId } = req.body;
+
+    if (!staffId) {
+      return res.status(400).json({
+        success: false,
+        message: "staffId is required",
+      });
+    }
+
+    const complaint = await Complaint.findById(id);
+
+    if (!complaint) {
+      return res.status(404).json({
+        success: false,
+        message: "Complaint not found",
+      });
+    }
+
+    complaint.assignedTo = staffId;
+    complaint.status = "assigned";
+
+    await complaint.save();
+
+    const updatedComplaint =
+      await Complaint.findById(id)
+        .populate(
+          "reportedBy",
+          "name email role"
+        )
+        .populate(
+          "assignedTo",
+          "name email role"
+        );
+
+    return res.status(200).json({
+      success: true,
+      message: "Complaint assigned successfully",
+      complaint: updatedComplaint,
+    });
+  } catch (error) {
+    console.error(
+      "Assign Complaint Error:",
+      error.message
+    );
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};
+
+// ==========================================
+// ADMIN → UPDATE COMPLAINT STATUS
+// ==========================================
+
+const updateComplaintStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status, adminNote } = req.body;
+
+    const allowedStatuses = [
+      "submitted",
+      "under_review",
+      "assigned",
+      "in_progress",
+      "resolved",
+      "rejected",
+    ];
+
+    if (!allowedStatuses.includes(status)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid complaint status",
+      });
+    }
+
+    const complaint =
+      await Complaint.findById(id);
+
+    if (!complaint) {
+      return res.status(404).json({
+        success: false,
+        message: "Complaint not found",
+      });
+    }
+
+    complaint.status = status;
+
+    if (adminNote) {
+      complaint.adminNote = adminNote;
+    }
+
+    if (status === "resolved") {
+      complaint.resolvedAt = new Date();
+    }
+
+    await complaint.save();
+
+    return res.status(200).json({
+      success: true,
+      message:
+        "Complaint status updated successfully",
+      complaint,
+    });
+  } catch (error) {
+    console.error(
+      "Update Complaint Status Error:",
+      error.message
+    );
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};
+
+// ==========================================
+// ADMIN → COMPLAINT DETAILS
+// ==========================================
+
+const getComplaintById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const complaint =
+      await Complaint.findById(id)
+        .populate(
+          "reportedBy",
+          "name email phone department role"
+        )
+        .populate(
+          "assignedTo",
+          "name email department role"
+        );
+
+    if (!complaint) {
+      return res.status(404).json({
+        success: false,
+        message: "Complaint not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      complaint,
+    });
+  } catch (error) {
+    console.error(
+      "Get Complaint Error:",
+      error.message
+    );
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};
 module.exports = {
   createComplaint,
   getMyComplaints,
   getAllComplaints,
+  assignComplaint,
+  updateComplaintStatus,
+  getComplaintById,
 };
