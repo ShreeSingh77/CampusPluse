@@ -58,6 +58,7 @@ router.patch(
 router.delete(
   "/:id",
   protect,
+  requireRole("admin", "super_admin"),
   deleteNotification
 );
 module.exports = router;
