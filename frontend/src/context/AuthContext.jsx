@@ -8,11 +8,16 @@ export const AuthProvider = ({ children }) => {
     return savedUser ? JSON.parse(savedUser) : null;
   });
 
-  const login = (userData, token) => {
+  const [token, setToken] = useState(() => {
+    return localStorage.getItem("campuspulse_token");
+  });
+
+  const login = (userData, accessToken) => {
     localStorage.setItem("campuspulse_user", JSON.stringify(userData));
-    localStorage.setItem("campuspulse_token", token);
+    localStorage.setItem("campuspulse_token", accessToken);
 
     setUser(userData);
+    setToken(accessToken);
   };
 
   const logout = () => {
@@ -20,15 +25,17 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("campuspulse_token");
 
     setUser(null);
+    setToken(null);
   };
 
   return (
     <AuthContext.Provider
       value={{
         user,
+        token,
         login,
         logout,
-        isAuthenticated: !!user,
+        isAuthenticated: !!user && !!token,
       }}
     >
       {children}

@@ -1,89 +1,189 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import "./Register.css";
 
-function Register() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [role, setRole] = useState("student");
+const Register = () => {
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
 
-    console.log({
-      name,
-      email,
-      password,
-      role,
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
     });
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    setError("");
+
+    if (!formData.name || !formData.email || !formData.password) {
+      setError("Please fill all fields");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      await axios.post(
+        "http://localhost:5000/api/auth/register",
+        formData,
+        {
+          withCredentials: true,
+        }
+      );
+
+      navigate("/login");
+    } catch (err) {
+      setError(
+        err.response?.data?.message ||
+          "Registration failed. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div className="auth-page">
-      <div className="auth-card">
-        <div className="auth-header">
-          <h1>Create Account</h1>
-          <p>Join CampusPulse today</p>
+    <div className="register-page">
+
+      <div className="register-card">
+
+        {/* LEFT SIDE */}
+        <div className="register-info">
+
+          <Link to="/" className="register-logo">
+            CampusPulse
+          </Link>
+
+          <div className="register-info-content">
+            <span className="register-badge">
+              🎓 Smart Campus
+            </span>
+
+            <h1>
+              Join the
+              <span> CampusPulse </span>
+              community.
+            </h1>
+
+            <p>
+              Create your account and make campus issue reporting
+              simpler, faster and more transparent.
+            </p>
+
+            <div className="register-features">
+              <div>
+                <span>✓</span>
+                Report campus complaints easily
+              </div>
+
+              <div>
+                <span>✓</span>
+                Track complaint status
+              </div>
+
+              <div>
+                <span>✓</span>
+                Stay connected with campus administration
+              </div>
+            </div>
+          </div>
+
         </div>
 
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>Full Name</label>
-            <input
-              type="text"
-              placeholder="Enter your full name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-            />
+        {/* RIGHT SIDE */}
+        <div className="register-form-section">
+
+          <div className="register-form-header">
+            <h2>Create Account</h2>
+
+            <p>
+              Get started with your CampusPulse account
+            </p>
           </div>
 
-          <div className="form-group">
-            <label>Email</label>
-            <input
-              type="email"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
+          {error && (
+            <div className="register-error">
+              {error}
+            </div>
+          )}
 
-          <div className="form-group">
-            <label>Password</label>
-            <input
-              type="password"
-              placeholder="Create a password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
+          <form onSubmit={handleSubmit}>
 
-          <div className="form-group">
-            <label>Account Type</label>
+            <div className="form-group">
+              <label>Full Name</label>
 
-            <select
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
+              <input
+                type="text"
+                name="name"
+                placeholder="Enter your full name"
+                value={formData.name}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Email Address</label>
+
+              <input
+                type="email"
+                name="email"
+                placeholder="Enter your email"
+                value={formData.email}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Password</label>
+
+              <input
+                type="password"
+                name="password"
+                placeholder="Create a password"
+                value={formData.password}
+                onChange={handleChange}
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="register-submit"
+              disabled={loading}
             >
-              <option value="student">Student</option>
-              <option value="staff">Staff</option>
-            </select>
+              {loading ? "Creating Account..." : "Create Account →"}
+            </button>
+
+          </form>
+
+          <div className="register-login">
+            Already have an account?
+            <Link to="/login">
+              Login
+            </Link>
           </div>
 
-          <button type="submit" className="auth-button">
-            Create Account
-          </button>
-        </form>
+          <Link to="/" className="register-back">
+            ← Back to Home
+          </Link>
 
-        <p className="auth-footer">
-          Already have an account?{" "}
-          <Link to="/login">Login</Link>
-        </p>
+        </div>
+
       </div>
+
     </div>
   );
-}
+};
 
 export default Register;
