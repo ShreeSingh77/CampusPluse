@@ -1,10 +1,15 @@
 const cron = require("node-cron");
 const Complaint = require("../models/Complaint");
+
 const findAvailableStaff = require("../utils/assignComplaintStaff");
 
 const {
   createEscalationNotifications,
 } = require("./notification.service");
+
+// ==========================================
+// PROCESS COMPLAINT ESCALATIONS
+// ==========================================
 
 const processComplaintEscalations = async () => {
   try {
@@ -14,30 +19,42 @@ const processComplaintEscalations = async () => {
     // LEVEL 1 ESCALATION
     // ==========================================
 
-    const complaints = await Complaint.find({
+    const level1Complaints = await Complaint.find({
       slaDeadline: { $lte: now },
+
+      // Only completely un-escalated complaints
       isEscalated: false,
       escalationLevel: 0,
+
       status: {
         $nin: ["resolved", "rejected"],
       },
     });
 
-    for (const complaint of complaints) {
-      // Original status before escalation
-      const previousStatus = complaint.status;
+   for (const complaint of level1Complaints) {
 
-      // ==========================================
-      // MARK LEVEL 1 ESCALATION
-      // ==========================================
+  // Safety check: prevent duplicate Level 1 escalation
+  if (
+    complaint.isEscalated === true ||
+    complaint.escalationLevel > 0
+  ) {
+    continue;
+  }
+
+  // Save original status
+  const previousStatus = complaint.status;
+
+      // ------------------------------------------
+      // Mark Level 1 escalation
+      // ------------------------------------------
 
       complaint.isEscalated = true;
       complaint.escalatedAt = now;
       complaint.escalationLevel = 1;
 
-      // ==========================================
-      // AUTO ASSIGN STAFF
-      // ==========================================
+      // ------------------------------------------
+      // Auto assign staff
+      // ------------------------------------------
 
       if (!complaint.assignedTo) {
         const staff = await findAvailableStaff(
@@ -58,17 +75,17 @@ const processComplaintEscalations = async () => {
         }
       }
 
-      // ==========================================
-      // LEVEL 2 DEADLINE
-      // ==========================================
+      // ------------------------------------------
+      // Level 2 deadline
+      // ------------------------------------------
 
       complaint.escalationNextDeadline = new Date(
         now.getTime() + 2 * 60 * 60 * 1000
       );
 
-      // ==========================================
-      // ESCALATION HISTORY
-      // ==========================================
+      // ------------------------------------------
+      // Escalation history
+      // ------------------------------------------
 
       complaint.escalationHistory.push({
         level: 1,
@@ -83,14 +100,14 @@ const processComplaintEscalations = async () => {
         `🚨 Level 1 Complaint escalated: ${complaint._id}`
       );
 
-      // ==========================================
-      // ADMIN NOTIFICATION
-      // ==========================================
+      // ------------------------------------------
+      // Notification
+      // ------------------------------------------
 
       await createEscalationNotifications(complaint);
 
       console.log(
-        `🔔 Admin notification processed for: ${complaint._id}`
+        `🔔 Level 1 notification processed for: ${complaint._id}`
       );
     }
 
@@ -98,19 +115,32 @@ const processComplaintEscalations = async () => {
     // LEVEL 2 ESCALATION
     // ==========================================
 
-    const level2Complaints = await Complaint.find({
-      escalationNextDeadline: { $lte: now },
-      isEscalated: true,
-      escalationLevel: 1,
-      status: {
-        $nin: ["resolved", "rejected"],
-      },
-    });
+   const level2Complaints = await Complaint.find({
+  escalationNextDeadline: { $lte: now },
+
+  isEscalated: true,
+  escalationLevel: 1,
+
+  status: {
+    $nin: ["resolved", "rejected"],
+  },
+
+  escalationHistory: {
+    $elemMatch: {
+      level: 1,
+    },
+  },
+});
 
     for (const complaint of level2Complaints) {
+      // ------------------------------------------
+      // Move to Level 2
+      // ------------------------------------------
+
       complaint.escalationLevel = 2;
 
-      // Level 2 is the final escalation
+      // IMPORTANT:
+      // No more escalation after Level 2
       complaint.escalationNextDeadline = null;
 
       complaint.escalationHistory.push({
@@ -127,9 +157,9 @@ const processComplaintEscalations = async () => {
         `🚨 Level 2 escalation: ${complaint._id}`
       );
 
-      // ==========================================
-      // LEVEL 2 ADMIN NOTIFICATION
-      // ==========================================
+      // ------------------------------------------
+      // Level 2 Notification
+      // ------------------------------------------
 
       await createEscalationNotifications(complaint);
 
@@ -143,7 +173,7 @@ const processComplaintEscalations = async () => {
     // ==========================================
 
     if (
-      complaints.length === 0 &&
+      level1Complaints.length === 0 &&
       level2Complaints.length === 0
     ) {
       console.log(
@@ -151,9 +181,9 @@ const processComplaintEscalations = async () => {
       );
     }
 
-    if (complaints.length > 0) {
+    if (level1Complaints.length > 0) {
       console.log(
-        `🚨 Level 1 escalation processed: ${complaints.length} complaint(s)`
+        `🚨 Level 1 escalation processed: ${level1Complaints.length} complaint(s)`
       );
     }
 
@@ -187,6 +217,10 @@ const startEscalationEngine = () => {
     "🚨 Complaint Escalation Engine started"
   );
 };
+
+// ==========================================
+// EXPORT
+// ==========================================
 
 module.exports = {
   startEscalationEngine,

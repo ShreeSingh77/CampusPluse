@@ -3,14 +3,19 @@ const User = require("../models/User");
 
 const createEscalationNotifications = async (complaint) => {
   try {
-    // Find active admins and super admins
+    // ==========================================
+    // FIND ACTIVE ADMINS
+    // ==========================================
+
     const admins = await User.find({
       role: { $in: ["admin", "super_admin"] },
       isActive: true,
     }).select("_id");
 
     if (admins.length === 0) {
-      console.log("⚠️ No active admin found for notification");
+      console.log(
+        "⚠️ No active admin found for notification"
+      );
       return;
     }
 
@@ -35,20 +40,58 @@ const createEscalationNotifications = async (complaint) => {
       message = `Complaint "${complaint.title}" has been escalated.`;
     }
 
-    const notifications = admins.map((admin) => ({
-      recipient: admin._id,
-      complaint: complaint._id,
-      type: "complaint_escalated",
-      title,
-      message,
-      isRead: false,
-    }));
+    // ==========================================
+    // PREVENT DUPLICATE NOTIFICATIONS
+    // ==========================================
 
-    await Notification.insertMany(notifications);
+    const existingNotifications =
+      await Notification.find({
+        complaint: complaint._id,
+        type: "complaint_escalated",
+        title,
+      }).select("recipient");
 
-    console.log(
-      `🔔 Escalation notifications created: ${notifications.length}`
+    const notifiedAdminIds = new Set(
+      existingNotifications.map((notification) =>
+        notification.recipient.toString()
+      )
     );
+
+    // ==========================================
+    // CREATE ONLY NEW NOTIFICATIONS
+    // ==========================================
+
+    const notifications = admins
+      .filter(
+        (admin) =>
+          !notifiedAdminIds.has(
+            admin._id.toString()
+          )
+      )
+      .map((admin) => ({
+        recipient: admin._id,
+        complaint: complaint._id,
+        type: "complaint_escalated",
+        title,
+        message,
+        isRead: false,
+      }));
+
+    // ==========================================
+    // SAVE NOTIFICATIONS
+    // ==========================================
+
+    if (notifications.length > 0) {
+      await Notification.insertMany(notifications);
+
+      console.log(
+        `🔔 Escalation notifications created: ${notifications.length}`
+      );
+    } else {
+      console.log(
+        "ℹ️ No new escalation notifications required"
+      );
+    }
   } catch (error) {
     console.error(
       "Create Escalation Notification Error:",

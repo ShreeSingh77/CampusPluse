@@ -166,6 +166,9 @@ const getAssignedComplaints = async (req, res) => {
   try {
     const complaints = await Complaint.find({
       assignedTo: req.user._id,
+      status: {
+        $nin: ["resolved", "rejected"],
+      },
     })
       .populate(
         "reportedBy",
@@ -432,6 +435,9 @@ if (adminNote) {
 
 if (status === "resolved") {
   complaint.resolvedAt = new Date();
+
+  // Stop any future escalation
+  complaint.escalationNextDeadline = null;
 } else {
   complaint.resolvedAt = null;
 }
