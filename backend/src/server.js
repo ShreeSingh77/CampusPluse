@@ -7,12 +7,16 @@ const dotenv = require("dotenv");
 
 const userRoutes = require("./routes/user.routes");
 const complaintRoutes = require("./routes/complaint.routes");
+const departmentRoutes = require("./routes/department.routes");
 const lostFoundClaimRoutes = require("./routes/lostFoundClaim.routes");
 const lostFoundRoutes = require("./routes/lostFound.routes");
 const connectDB = require("./config/db");
 const authRoutes = require("./routes/auth.routes");
 const announcementRoutes = require("./routes/announcement.routes");
 const eventRoutes = require("./routes/event.routes");
+
+
+
 
 const notificationRoutes = require("./routes/notification.routes");
 const { startEscalationEngine } = require("./services/escalation.service");
@@ -70,7 +74,9 @@ app.use(
   "/api/notifications",
   notificationRoutes
 );
+
 app.use("/api/users", userRoutes);
+app.use("/api/departments", departmentRoutes);
 // Database
 connectDB();
 

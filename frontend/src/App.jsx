@@ -26,6 +26,7 @@ import StaffProfile from "./pages/staff/Profile";
 //admin
 import AdminComplaints from "./pages/admin/Complaints";
 import AdminComplaintDetails from "./pages/admin/ComplaintDetails";
+import StaffManagement from "./pages/admin/StaffManagement";
 // Home Page
 // Home Page
 const Home = () => {
@@ -391,6 +392,10 @@ function App() {
       <AdminComplaintDetails />
     </ProtectedRoute>
   }
+/>
+<Route
+  path="/admin/staff"
+  element={<StaffManagement />}
 />
         {/* Unknown Route */}
         <Route path="*" element={<Navigate to="/" replace />} />

@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const User = require("../models/User");
 require("../models/Department");
+const Department = require("../models/Department");
 // ==========================================
 // GET ALL STAFF USERS
 // ==========================================
@@ -71,7 +72,17 @@ const createStaffUser = async (req, res) => {
         message: "An account with this email already exists",
       });
     }
+const departmentExists = await Department.findOne({
+  _id: department,
+  isActive: true,
+});
 
+if (!departmentExists) {
+  return res.status(400).json({
+    success: false,
+    message: "Invalid or inactive department",
+  });
+}
     // Password hashing
     const hashedPassword = await bcrypt.hash(password, 12);
 

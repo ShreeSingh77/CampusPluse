@@ -1,0 +1,445 @@
+/* ==========================================
+   ADD STAFF PAGE
+========================================== */
+
+.add-staff-page {
+  min-height: 100vh;
+  background: #f6f8fb;
+  color: #1f2937;
+}
+
+/* ==========================================
+   HEADER
+========================================== */
+
+.add-staff-header {
+  width: min(900px, 92%);
+  margin: 0 auto;
+  padding: 45px 0 25px;
+}
+
+.add-staff-back {
+  border: none;
+  background: transparent;
+  padding: 0;
+  margin-bottom: 22px;
+
+  color: #6b7280;
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.add-staff-back:hover {
+  color: #111827;
+}
+
+.add-staff-label {
+  margin: 0 0 8px;
+
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+
+  color: #6b7280;
+}
+
+.add-staff-header h1 {
+  margin: 0;
+
+  font-size: 34px;
+  line-height: 1.2;
+  color: #111827;
+}
+
+.add-staff-header p {
+  margin: 10px 0 0;
+
+  color: #6b7280;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* ==========================================
+   FORM CONTAINER
+========================================== */
+
+.add-staff-container {
+  width: min(900px, 92%);
+  margin: 0 auto 70px;
+}
+
+.add-staff-card {
+  background: #ffffff;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+
+  padding: 35px;
+
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+}
+
+/* ==========================================
+   FORM SECTION
+========================================== */
+
+.add-staff-form-section {
+  margin-bottom: 30px;
+}
+
+.add-staff-form-section:last-of-type {
+  margin-bottom: 0;
+}
+
+.add-staff-section-title {
+  margin-bottom: 20px;
+}
+
+.add-staff-section-title h2 {
+  margin: 0;
+
+  font-size: 18px;
+  font-weight: 700;
+
+  color: #111827;
+}
+
+.add-staff-section-title p {
+  margin: 5px 0 0;
+
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* ==========================================
+   FORM GRID
+========================================== */
+
+.add-staff-form-grid {
+  display: grid;
+
+  grid-template-columns: repeat(2, 1fr);
+
+  gap: 20px;
+}
+
+.add-staff-form-group {
+  display: flex;
+  flex-direction: column;
+
+  gap: 7px;
+}
+
+.add-staff-form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+/* ==========================================
+   LABEL
+========================================== */
+
+.add-staff-form-group label {
+  font-size: 13px;
+  font-weight: 700;
+
+  color: #374151;
+}
+
+.add-staff-required {
+  color: #dc2626;
+  margin-left: 3px;
+}
+
+/* ==========================================
+   INPUTS & SELECT
+========================================== */
+
+.add-staff-form-group input,
+.add-staff-form-group select {
+  width: 100%;
+  box-sizing: border-box;
+
+  padding: 12px 13px;
+
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+
+  background: #ffffff;
+  color: #111827;
+
+  font-size: 14px;
+
+  outline: none;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.add-staff-form-group input::placeholder {
+  color: #9ca3af;
+}
+
+.add-staff-form-group input:focus,
+.add-staff-form-group select:focus {
+  border-color: #111827;
+
+  box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.08);
+}
+
+.add-staff-form-group input:disabled,
+.add-staff-form-group select:disabled {
+  background: #f9fafb;
+  cursor: not-allowed;
+}
+
+/* ==========================================
+   PASSWORD HINT
+========================================== */
+
+.add-staff-password-hint {
+  margin: 2px 0 0;
+
+  font-size: 12px;
+  line-height: 1.5;
+
+  color: #9ca3af;
+}
+
+/* ==========================================
+   DIVIDER
+========================================== */
+
+.add-staff-divider {
+  height: 1px;
+
+  background: #e5e7eb;
+
+  margin: 30px 0;
+}
+
+/* ==========================================
+   INFORMATION BOX
+========================================== */
+
+.add-staff-info-box {
+  margin-top: 25px;
+
+  padding: 15px 17px;
+
+  display: flex;
+  align-items: flex-start;
+
+  gap: 11px;
+
+  background: #f9fafb;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 9px;
+}
+
+.add-staff-info-icon {
+  font-size: 17px;
+  flex-shrink: 0;
+}
+
+.add-staff-info-box p {
+  margin: 0;
+
+  font-size: 13px;
+  line-height: 1.6;
+
+  color: #6b7280;
+}
+
+.add-staff-info-box strong {
+  color: #374151;
+}
+
+/* ==========================================
+   FORM ACTIONS
+========================================== */
+
+.add-staff-form-actions {
+  display: flex;
+
+  align-items: center;
+  justify-content: flex-end;
+
+  gap: 12px;
+
+  margin-top: 32px;
+}
+
+/* ==========================================
+   CANCEL BUTTON
+========================================== */
+
+.add-staff-cancel-btn {
+  padding: 12px 20px;
+
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+
+  background: #ffffff;
+  color: #374151;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+.add-staff-cancel-btn:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.add-staff-cancel-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ==========================================
+   SUBMIT BUTTON
+========================================== */
+
+.add-staff-submit-btn {
+  padding: 12px 23px;
+
+  border: none;
+  border-radius: 8px;
+
+  background: #111827;
+  color: #ffffff;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.add-staff-submit-btn:hover {
+  background: #000000;
+  transform: translateY(-1px);
+}
+
+.add-staff-submit-btn:active {
+  transform: translateY(0);
+}
+
+.add-staff-submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ==========================================
+   FOOTER
+========================================== */
+
+.add-staff-footer {
+  margin-top: 30px;
+
+  padding: 25px;
+
+  background: #ffffff;
+
+  border-top: 1px solid #e5e7eb;
+
+  text-align: center;
+}
+
+.add-staff-footer-brand {
+  font-size: 18px;
+  font-weight: 800;
+
+  color: #111827;
+}
+
+.add-staff-footer-text {
+  margin-top: 5px;
+
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.add-staff-footer-copy {
+  margin-top: 9px;
+
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 700px) {
+
+  .add-staff-header {
+    padding-top: 30px;
+  }
+
+  .add-staff-header h1 {
+    font-size: 28px;
+  }
+
+  .add-staff-card {
+    padding: 23px;
+  }
+
+  .add-staff-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .add-staff-form-group.full-width {
+    grid-column: auto;
+  }
+
+  .add-staff-form-actions {
+    flex-direction: column-reverse;
+  }
+
+  .add-staff-submit-btn,
+  .add-staff-cancel-btn {
+    width: 100%;
+  }
+}
+
+/* ==========================================
+   SMALL MOBILE
+========================================== */
+
+@media (max-width: 450px) {
+
+  .add-staff-header,
+  .add-staff-container {
+    width: 94%;
+  }
+
+  .add-staff-card {
+    padding: 18px;
+    border-radius: 11px;
+  }
+
+  .add-staff-header h1 {
+    font-size: 25px;
+  }
+
+  .add-staff-form-group input,
+  .add-staff-form-group select {
+    padding: 11px;
+  }
+}

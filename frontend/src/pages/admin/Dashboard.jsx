@@ -41,7 +41,13 @@ const AdminDashboard = () => {
           >
             Notifications
           </button>
-
+           
+           <button
+  onClick={() => navigate("/admin/staff")}
+  className="admin-nav-btn"
+>
+  Staff
+</button>
           <button
             onClick={() => navigate("/admin/profile")}
             className="admin-nav-btn"
@@ -228,7 +234,23 @@ const AdminDashboard = () => {
               <b>→</b>
             </button>
 
+           <button
+  className="admin-action-card"
+  onClick={() => navigate("/admin/staff")}
+>
+  <span className="action-icon">
+    👥
+  </span>
 
+  <span>
+    <strong>Staff Management</strong>
+    <small>
+      Add and manage campus staff
+    </small>
+  </span>
+
+  <b>→</b>
+</button>
             <button
               className="admin-action-card"
               onClick={() => navigate("/admin/notifications")}
