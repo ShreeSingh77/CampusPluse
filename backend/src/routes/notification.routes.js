@@ -25,7 +25,7 @@ const router = express.Router();
 router.get(
   "/",
   protect,
-  requireRole("admin", "super_admin"),
+  requireRole("admin", "super_admin","staff"),
   getMyNotifications
 );
 
@@ -41,7 +41,7 @@ router.get(
 router.patch(
   "/:id/read",
   protect,
-  requireRole("admin", "super_admin"),
+  requireRole("admin", "super_admin","staff"),
   markNotificationAsRead
 );
 
@@ -52,13 +52,13 @@ router.patch(
 router.patch(
   "/read-all",
   protect,
-  requireRole("admin", "super_admin"),
+  requireRole("admin", "super_admin","staff"),
   markAllNotificationsAsRead
 );
 router.delete(
   "/:id",
   protect,
-  requireRole("admin", "super_admin"),
+  requireRole("admin", "super_admin","staff"),
   deleteNotification
 );
 module.exports = router;

@@ -780,3 +780,67 @@
 
 }
 
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.staff-footer {
+  width: 100%;
+
+  margin-top: 20px;
+  padding: 24px 20px;
+
+  background: #0f172a;
+  color: #ffffff;
+
+  text-align: center;
+
+  box-sizing: border-box;
+}
+
+.staff-footer-brand {
+  margin-bottom: 5px;
+
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.staff-footer-text {
+  margin-bottom: 5px;
+
+  color: #cbd5e1;
+
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.staff-footer-copy {
+  color: #94a3b8;
+
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+
+/* ================= MOBILE FOOTER ================= */
+
+@media (max-width: 700px) {
+
+  .staff-footer {
+    margin-top: 15px;
+    padding: 22px 14px;
+  }
+
+  .staff-footer-brand {
+    font-size: 14px;
+  }
+
+  .staff-footer-text {
+    font-size: 10px;
+  }
+
+  .staff-footer-copy {
+    font-size: 9px;
+  }
+
+}

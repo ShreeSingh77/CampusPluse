@@ -92,7 +92,7 @@ const StaffDashboard = () => {
           </button>
 
           <button
-  className="navbar-link"
+  className="staff-navbar-link"
   onClick={() => navigate("/staff/complaints")}
 >
   Complaints
@@ -437,7 +437,25 @@ const StaffDashboard = () => {
 
         </section>
 
-      </main>
+            </main>
+
+      {/* ================= FOOTER ================= */}
+
+      <footer className="staff-footer">
+
+        <div className="staff-footer-brand">
+          CampusPulse
+        </div>
+
+        <div className="staff-footer-text">
+          Smart Campus Complaint Management System
+        </div>
+
+        <div className="staff-footer-copy">
+          © 2026 CampusPulse. All rights reserved.
+        </div>
+
+      </footer>
 
     </div>
   );

@@ -38,7 +38,31 @@ const StaffComplaintDetails = () => {
 
     fetchComplaint();
   }, [id]);
+const statusOptions = {
+  submitted: [
+    { value: "under_review", label: "Under Review" },
+    { value: "assigned", label: "Assigned" },
+    { value: "rejected", label: "Rejected" },
+  ],
 
+  under_review: [
+    { value: "assigned", label: "Assigned" },
+    { value: "rejected", label: "Rejected" },
+  ],
+
+  assigned: [
+    { value: "in_progress", label: "In Progress" },
+    { value: "rejected", label: "Rejected" },
+  ],
+
+  in_progress: [
+    { value: "resolved", label: "Resolved" },
+    { value: "rejected", label: "Rejected" },
+  ],
+
+  resolved: [],
+  rejected: [],
+};
   const handleStatusUpdate = async () => {
     if (!status || status === complaint.status) {
       toast.error("Please select a different status");
@@ -280,28 +304,25 @@ const StaffComplaintDetails = () => {
             Complaint Status
           </label>
 
-          <select
-            id="status"
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
-            disabled={updating}
-          >
-            <option value="assigned">
-              Assigned
-            </option>
+         <select
+  id="status"
+  value={status}
+  onChange={(e) => setStatus(e.target.value)}
+  disabled={updating}
+>
+  <option value={complaint.status}>
+    Current: {complaint.status.replace("_", " ")}
+  </option>
 
-            <option value="in_progress">
-              In Progress
-            </option>
-
-            <option value="resolved">
-              Resolved
-            </option>
-
-            <option value="rejected">
-              Rejected
-            </option>
-          </select>
+  {(statusOptions[complaint.status] || []).map((option) => (
+    <option
+      key={option.value}
+      value={option.value}
+    >
+      {option.label}
+    </option>
+  ))}
+</select>
 
           <button
             className="update-status-btn"

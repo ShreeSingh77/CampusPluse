@@ -18,6 +18,8 @@ import Profile from "./pages/student/Profile";
 import StaffDashboard from "./pages/staff/Dashboard";
 import StaffComplaints from "./pages/staff/Complaints";
 import StaffComplaintDetails from "./pages/staff/ComplaintDetails";
+import StaffNotifications from "./pages/staff/Notifications";
+import StaffProfile from "./pages/staff/Profile";
 // Home Page
 // Home Page
 const Home = () => {
@@ -315,15 +317,16 @@ function App() {
 />
 
         {/* Staff */}
-        <Route
-          path="/staff/dashboard"
-          element={
-            <ProtectedRoute allowedRoles={["staff"]}>
-              <StaffDashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
+<Route
+  path="/staff/dashboard"
+  element={
+    <ProtectedRoute allowedRoles={["staff"]}>
+      <StaffDashboard />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
   path="/staff/complaints"
   element={
     <ProtectedRoute allowedRoles={["staff"]}>
@@ -331,11 +334,29 @@ function App() {
     </ProtectedRoute>
   }
 />
+
 <Route
   path="/staff/complaints/:id"
   element={
     <ProtectedRoute allowedRoles={["staff"]}>
       <StaffComplaintDetails />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/staff/notifications"
+  element={
+    <ProtectedRoute allowedRoles={["staff"]}>
+      <StaffNotifications />
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/staff/profile"
+  element={
+    <ProtectedRoute allowedRoles={["staff"]}>
+      <StaffProfile />
     </ProtectedRoute>
   }
 />

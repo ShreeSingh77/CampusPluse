@@ -392,6 +392,28 @@ const recentComplaints = complaints.slice(0, 5);
 
       </main>
 
+   
+      {/* ================= FOOTER ================= */}
+
+      <footer className="student-footer">
+        <div className="student-footer-content">
+
+          <div className="student-footer-brand">
+            CampusPulse
+          </div>
+
+          <p>
+            Smart Campus Complaint Management System
+          </p>
+
+          <span>
+            © {new Date().getFullYear()} CampusPulse. All rights reserved.
+          </span>
+
+        </div>
+      </footer>
+
+   
     </div>
   );
 }
