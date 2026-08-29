@@ -471,21 +471,40 @@ const getComplaintById = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const complaint =
-      await Complaint.findById(id)
-        .populate(
-          "reportedBy",
-          "name email phone department role"
-        )
-        .populate(
-          "assignedTo",
-          "name email department role"
-        );
+    const complaint = await Complaint.findById(id)
+      .populate(
+        "reportedBy",
+        "name email phone department role"
+      )
+      .populate(
+        "assignedTo",
+        "name email department role"
+      )
+      .populate(
+        "department",
+        "name code description"
+      );
 
     if (!complaint) {
       return res.status(404).json({
         success: false,
         message: "Complaint not found",
+      });
+    }
+
+    // ==========================================
+    // STUDENT SECURITY CHECK
+    // ==========================================
+
+    if (
+      req.user.role === "student" &&
+      complaint.reportedBy._id.toString() !==
+        req.user._id.toString()
+    ) {
+      return res.status(403).json({
+        success: false,
+        message:
+          "You are not allowed to view this complaint",
       });
     }
 

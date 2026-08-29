@@ -5,28 +5,19 @@ import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import { Toaster } from "react-hot-toast";
 
-
+//student
 import StudentDashboard from "./pages/student/Dashboard";
 import AdminDashboard from "./pages/admin/Dashboard";
 import NewComplaint from "./pages/student/NewComplaint";
 import MyComplaints from "./pages/student/MyComplaints";
-// Temporary Staff Dashboard
-const StaffDashboard = () => {
-  const { user } = useAuth();
+import ComplaintDetails from "./pages/student/ComplaintDetails";
+import Notifications from "./pages/student/Notifications";
+import Profile from "./pages/student/Profile";
 
-  return (
-    
-    <div className="dashboard-page">
-      <div className="dashboard-card">
-        <h1>Staff Dashboard</h1>
-        <p>
-          Welcome <strong>{user?.name || "Staff"}</strong>
-        </p>
-      </div>
-    </div>
-  );
-};
-
+//staff
+import StaffDashboard from "./pages/staff/Dashboard";
+import StaffComplaints from "./pages/staff/Complaints";
+import StaffComplaintDetails from "./pages/staff/ComplaintDetails";
 // Home Page
 // Home Page
 const Home = () => {
@@ -298,6 +289,31 @@ function App() {
     </ProtectedRoute>
   }
 />
+<Route
+  path="/student/notifications"
+  element={
+    <ProtectedRoute allowedRoles={["student"]}>
+      <Notifications />
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/student/profile"
+  element={
+    <ProtectedRoute allowedRoles={["student"]}>
+      <Profile />
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/student/complaints/:id"
+  element={
+    <ProtectedRoute allowedRoles={["student"]}>
+      <ComplaintDetails />
+    </ProtectedRoute>
+  }
+/>
+
         {/* Staff */}
         <Route
           path="/staff/dashboard"
@@ -307,7 +323,23 @@ function App() {
             </ProtectedRoute>
           }
         />
-
+        <Route
+  path="/staff/complaints"
+  element={
+    <ProtectedRoute allowedRoles={["staff"]}>
+      <StaffComplaints />
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/staff/complaints/:id"
+  element={
+    <ProtectedRoute allowedRoles={["staff"]}>
+      <StaffComplaintDetails />
+    </ProtectedRoute>
+  }
+/>
+     
         {/* Admin */}
         <Route
           path="/admin/dashboard"

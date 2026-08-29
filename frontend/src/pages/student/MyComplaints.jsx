@@ -1,13 +1,10 @@
-
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
-import api from "../../services/api";
 import { toast } from "react-hot-toast";
+import api from "../../services/api";
 import "./MyComplaints.css";
 
-function MyComplaints() {
-  const { user } = useAuth();
+const MyComplaints = () => {
   const navigate = useNavigate();
 
   const [complaints, setComplaints] = useState([]);
@@ -34,150 +31,188 @@ function MyComplaints() {
     fetchComplaints();
   }, []);
 
-  const getStatusLabel = (status) => {
-    return status.replaceAll("_", " ");
+  const formatStatus = (status) => {
+    return status
+      ?.replace(/_/g, " ")
+      .replace(/\b\w/g, (char) => char.toUpperCase());
   };
 
-  if (loading) {
-    return (
-      <div className="my-complaints-page">
-        <div className="complaints-loading">
-          <h2>Loading complaints...</h2>
-          <p>Please wait.</p>
-        </div>
-      </div>
-    );
-  }
+  const formatPriority = (priority) => {
+    return priority
+      ?.replace(/\b\w/g, (char) => char.toUpperCase());
+  };
+
+  const formatDate = (date) => {
+    if (!date) return "N/A";
+
+    return new Date(date).toLocaleDateString("en-IN", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+  };
 
   return (
     <div className="my-complaints-page">
 
       {/* HEADER */}
-      <header className="complaints-header">
 
-        <div>
-          <p className="page-label">
-            Student Portal
-          </p>
-
-          <h1>My Complaints</h1>
-
-          <p>
-            Track all complaints submitted by you.
-          </p>
-        </div>
+      <div className="my-complaints-header">
 
         <button
-          className="back-dashboard-btn"
+          className="back-button"
           onClick={() =>
             navigate("/student/dashboard")
           }
         >
-          ← Dashboard
+          ← Back to Dashboard
         </button>
 
-      </header>
+        <p className="page-label">
+          Student Dashboard
+        </p>
 
-      {/* SUMMARY */}
-      <div className="complaints-summary">
-        <strong>{complaints.length}</strong>
-        <span>Total Complaints</span>
+        <h1>My Complaints</h1>
+
+        <p className="page-description">
+          View and track all the complaints you have
+          submitted.
+        </p>
+
       </div>
 
-      {/* COMPLAINTS */}
-      {complaints.length === 0 ? (
 
-        <div className="no-complaints">
+      {/* CONTENT */}
 
-          <div className="no-complaints-icon">
-            📋
+      <div className="my-complaints-card">
+
+        {loading ? (
+
+          <div className="complaints-loading">
+            <div className="loading-icon">⏳</div>
+
+            <h3>Loading complaints...</h3>
+
+            <p>
+              Please wait while we fetch your complaints.
+            </p>
           </div>
 
-          <h2>No complaints yet</h2>
+        ) : complaints.length === 0 ? (
 
-          <p>
-            You haven't submitted any complaints yet.
-          </p>
+          <div className="complaints-empty">
 
-          <button
-            onClick={() =>
-              navigate("/student/complaints/new")
-            }
-          >
-            + Submit Complaint
-          </button>
+            <div className="empty-icon">
+              📋
+            </div>
 
-        </div>
+            <h3>No complaints yet</h3>
 
-      ) : (
+            <p>
+              You haven't submitted any complaints.
+            </p>
 
-        <div className="complaints-page-list">
-
-          {complaints.map((complaint) => (
-
-            <div
-              className="complaint-page-card"
-              key={complaint._id}
+            <button
+              className="new-complaint-button"
+              onClick={() =>
+                navigate("/student/complaints/new")
+              }
             >
+              + Submit New Complaint
+            </button>
 
-              <div className="complaint-page-main">
+          </div>
 
-                <div className="complaint-page-top">
+        ) : (
 
-                  <h2>
-                    {complaint.title}
-                  </h2>
+          <div className="complaints-list">
+
+            {complaints.map((complaint) => (
+
+              <div
+                className="my-complaint-item"
+                key={complaint._id}
+              >
+
+                {/* MAIN CONTENT */}
+
+                <div className="complaint-main">
+
+                  <div className="complaint-title-row">
+
+                    <h3>
+                      {complaint.title}
+                    </h3>
+
+                    <span
+                      className={`complaint-status ${complaint.status}`}
+                    >
+                      {formatStatus(complaint.status)}
+                    </span>
+
+                  </div>
+
+                  <p className="complaint-description">
+                    {complaint.description}
+                  </p>
+
+                  <div className="complaint-details">
+
+                    <span>
+                      📍 {complaint.location}
+                    </span>
+
+                    <span>
+                      📂 {formatStatus(complaint.category)}
+                    </span>
+
+                    <span>
+                      📅 {formatDate(complaint.createdAt)}
+                    </span>
+
+                  </div>
+
+                </div>
+
+
+                {/* RIGHT SIDE */}
+
+                <div className="complaint-side">
 
                   <span
-                    className={`status-badge ${complaint.status}`}
+                    className={`complaint-priority ${complaint.priority}`}
                   >
-                    {getStatusLabel(
-                      complaint.status
-                    )}
+                    {formatPriority(complaint.priority)}
                   </span>
 
-                </div>
+                  <div className="complaint-date">
+  Submitted on{" "}
+  {formatDate(complaint.createdAt)}
+</div>
 
-                <p className="complaint-description">
-                  {complaint.description}
-                </p>
+<button
+  className="view-details-btn"
+  onClick={() =>
+    navigate(`/student/complaints/${complaint._id}`)
+  }
+>
+  View Details →
+</button>
 
-                <div className="complaint-details">
-
-                  <span>
-                    📍 {complaint.location}
-                  </span>
-
-                  <span>
-                    📂 {complaint.category}
-                  </span>
-
-                  <span>
-                    ⚡ {complaint.priority}
-                  </span>
-
-                </div>
-
-                <div className="complaint-date">
-                  Submitted:{" "}
-                  {new Date(
-                    complaint.createdAt
-                  ).toLocaleDateString()}
                 </div>
 
               </div>
 
-            </div>
+            ))}
 
-          ))}
+          </div>
 
-        </div>
+        )}
 
-      )}
+      </div>
 
     </div>
   );
-}
+};
 
 export default MyComplaints;
-

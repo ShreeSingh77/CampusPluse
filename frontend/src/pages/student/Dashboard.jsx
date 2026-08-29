@@ -77,13 +77,20 @@ const recentComplaints = complaints.slice(0, 5);
   My Complaints
 </button>
 
-          <button className="navbar-link">
-            Notifications
-          </button>
+         <button
+  className="navbar-link"
+  onClick={() => navigate("/student/notifications")}
+>
+  Notifications
+  <span className="notification-badge">4</span>
+</button>
 
-          <button className="navbar-link">
-            Profile
-          </button>
+          <button
+  className="navbar-link"
+  onClick={() => navigate("/student/profile")}
+>
+  Profile
+</button>
 
         </div>
 
@@ -142,19 +149,26 @@ const recentComplaints = complaints.slice(0, 5);
   My Complaints
 </button>
 
-            <button
-              className="mobile-nav-link"
-              onClick={closeMenu}
-            >
-              Notifications
-            </button>
+           <button
+  className="mobile-nav-link"
+  onClick={() => {
+    closeMenu();
+    navigate("/student/notifications");
+  }}
+>
+  Notifications
+  <span className="notification-badge">4</span>
+</button>
 
             <button
-              className="mobile-nav-link"
-              onClick={closeMenu}
-            >
-              Profile
-            </button>
+  className="mobile-nav-link"
+  onClick={() => {
+    closeMenu();
+    navigate("/student/profile");
+  }}
+>
+  Profile
+</button>
 
             <button
               className="mobile-logout-button"

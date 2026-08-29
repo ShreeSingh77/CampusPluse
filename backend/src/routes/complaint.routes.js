@@ -68,6 +68,7 @@ router.get(
   "/:id",
   protect,
   requireRole(
+    "student",
     "admin",
     "super_admin",
     "staff"
