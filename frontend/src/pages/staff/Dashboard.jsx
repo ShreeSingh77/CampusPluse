@@ -1,22 +1,20 @@
-
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
 import { toast } from "react-hot-toast";
 import api from "../../services/api";
+import { useAuth } from "../../context/AuthContext";
 import "./Dashboard.css";
 
 const StaffDashboard = () => {
-  const navigate = useNavigate();
-  const { user, logout } = useAuth();
+ 
 
-  const [menuOpen, setMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const { user , logout} = useAuth();
+
   const [complaints, setComplaints] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const closeMenu = () => {
-    setMenuOpen(false);
-  };
+  const staffName = user?.name || "Staff Member";
 
   // ==========================================
   // FETCH ASSIGNED COMPLAINTS
@@ -25,9 +23,15 @@ const StaffDashboard = () => {
   useEffect(() => {
     const fetchAssignedComplaints = async () => {
       try {
-        const response = await api.get("/complaints/assigned");
+        const response = await api.get(
+          "/complaints/assigned"
+        );
 
-        setComplaints(response.data.complaints || []);
+        if (response.data.success) {
+          setComplaints(
+            response.data.complaints || []
+          );
+        }
       } catch (error) {
         console.error(
           "Fetch assigned complaints error:",
@@ -36,7 +40,7 @@ const StaffDashboard = () => {
 
         toast.error(
           error.response?.data?.message ||
-            "Failed to load assigned complaints"
+            "Failed to load complaints"
         );
       } finally {
         setLoading(false);
@@ -50,13 +54,12 @@ const StaffDashboard = () => {
   // STATISTICS
   // ==========================================
 
-  const totalAssigned = complaints.length;
+  const totalComplaints = complaints.length;
 
   const pendingComplaints = complaints.filter(
     (complaint) =>
-      complaint.status === "submitted" ||
-      complaint.status === "under_review" ||
-      complaint.status === "assigned"
+      complaint.status === "assigned" ||
+      complaint.status === "under_review"
   ).length;
 
   const inProgressComplaints = complaints.filter(
@@ -66,16 +69,16 @@ const StaffDashboard = () => {
 
   const urgentComplaints = complaints.filter(
     (complaint) =>
-      complaint.priority === "urgent" ||
-      complaint.priority === "high"
+      complaint.priority === "urgent"
   ).length;
-
+const handleLogout = async () => {
+  await logout();
+  navigate("/login");
+};
   return (
-    <div className="staff-dashboard">
+    <div className="staff-dashboard-page">
 
-      {/* ==========================================
-          NAVBAR
-          ========================================== */}
+      {/* ================= NAVBAR ================= */}
 
       <nav className="staff-navbar">
 
@@ -83,23 +86,28 @@ const StaffDashboard = () => {
           CampusPulse
         </div>
 
-        {/* DESKTOP NAVIGATION */}
+        <div className="staff-navbar-actions">
 
-        <div className="staff-desktop-navigation">
-
-          <button className="staff-navbar-link active">
+          <button
+            className="staff-nav-btn active"
+            onClick={() =>
+              navigate("/staff/dashboard")
+            }
+          >
             Dashboard
           </button>
 
           <button
-  className="staff-navbar-link"
-  onClick={() => navigate("/staff/complaints")}
->
-  Complaints
-</button>
+            className="staff-nav-btn"
+            onClick={() =>
+              navigate("/staff/complaints")
+            }
+          >
+            Complaints
+          </button>
 
           <button
-            className="staff-navbar-link"
+            className="staff-nav-btn"
             onClick={() =>
               navigate("/staff/notifications")
             }
@@ -108,142 +116,56 @@ const StaffDashboard = () => {
           </button>
 
           <button
-            className="staff-navbar-link"
+            className="staff-nav-btn"
             onClick={() =>
               navigate("/staff/profile")
             }
           >
             Profile
           </button>
-
+        <button
+  className="staff-logout-btn"
+  onClick={handleLogout}
+>
+  Logout
+</button>
         </div>
-
-        {/* USER */}
-
-        <div className="staff-navbar-user">
-
-          <span className="staff-user-name">
-            {user?.name || "Staff"}
-          </span>
-
-          <div className="staff-user-avatar">
-            {user?.name?.charAt(0).toUpperCase() || "S"}
-          </div>
-
-          <button
-            className="staff-logout-button"
-            onClick={logout}
-          >
-            Logout
-          </button>
-
-          {/* MOBILE MENU */}
-
-          <button
-            className={`staff-hamburger ${
-              menuOpen ? "active" : ""
-            }`}
-            onClick={() =>
-              setMenuOpen(!menuOpen)
-            }
-            aria-label="Open navigation menu"
-          >
-            <span></span>
-            <span></span>
-            <span></span>
-          </button>
-
-        </div>
-
-        {/* MOBILE NAVIGATION */}
-
-        {menuOpen && (
-          <div className="staff-mobile-navigation">
-
-            <button
-              className="staff-mobile-link active"
-              onClick={closeMenu}
-            >
-              Dashboard
-            </button>
-
-            <button
-              className="staff-mobile-link"
-              onClick={() => {
-                closeMenu();
-                navigate("/staff/complaints");
-              }}
-            >
-              My Complaints
-            </button>
-
-            <button
-              className="staff-mobile-link"
-              onClick={() => {
-                closeMenu();
-                navigate("/staff/notifications");
-              }}
-            >
-              Notifications
-            </button>
-
-            <button
-              className="staff-mobile-link"
-              onClick={() => {
-                closeMenu();
-                navigate("/staff/profile");
-              }}
-            >
-              Profile
-            </button>
-
-            <button
-              className="staff-mobile-logout"
-              onClick={() => {
-                closeMenu();
-                logout();
-              }}
-            >
-              Logout
-            </button>
-
-          </div>
-        )}
 
       </nav>
 
-      {/* ==========================================
-          MAIN
-          ========================================== */}
+      {/* ================= MAIN ================= */}
 
-      <main className="staff-main">
+      <main className="staff-dashboard-main">
 
-        {/* HEADER */}
+        {/* ================= WELCOME ================= */}
 
-        <section className="staff-header">
+        <section className="staff-welcome">
 
           <div>
 
-            <p className="staff-dashboard-label">
+            <p className="staff-page-label">
               Staff Dashboard
             </p>
 
             <h1>
-              Welcome, {user?.name || "Staff"} 👋
+              Welcome back, {staffName} 👋
             </h1>
 
-            <p className="staff-dashboard-subtitle">
-              Manage your assigned complaints and help
-              resolve campus issues efficiently.
+            <p>
+              Manage your assigned complaints and
+              help resolve campus issues efficiently.
             </p>
 
           </div>
 
+          <div className="staff-status-badge">
+            <span>●</span>
+            Staff Active
+          </div>
+
         </section>
 
-        {/* ==========================================
-            STATISTICS
-            ========================================== */}
+        {/* ================= STATISTICS ================= */}
 
         <section className="staff-stats-grid">
 
@@ -254,8 +176,8 @@ const StaffDashboard = () => {
             </div>
 
             <div>
-              <p>Total Assigned</p>
-              <h2>{totalAssigned}</h2>
+              <span>Assigned Complaints</span>
+              <strong>{totalComplaints}</strong>
             </div>
 
           </div>
@@ -267,8 +189,8 @@ const StaffDashboard = () => {
             </div>
 
             <div>
-              <p>Pending</p>
-              <h2>{pendingComplaints}</h2>
+              <span>Pending</span>
+              <strong>{pendingComplaints}</strong>
             </div>
 
           </div>
@@ -280,8 +202,8 @@ const StaffDashboard = () => {
             </div>
 
             <div>
-              <p>In Progress</p>
-              <h2>{inProgressComplaints}</h2>
+              <span>In Progress</span>
+              <strong>{inProgressComplaints}</strong>
             </div>
 
           </div>
@@ -293,21 +215,19 @@ const StaffDashboard = () => {
             </div>
 
             <div>
-              <p>High Priority</p>
-              <h2>{urgentComplaints}</h2>
+              <span>Urgent</span>
+              <strong>{urgentComplaints}</strong>
             </div>
 
           </div>
 
         </section>
 
-        {/* ==========================================
-            ASSIGNED COMPLAINTS
-            ========================================== */}
+        {/* ================= COMPLAINTS ================= */}
 
-        <section className="staff-section">
+        <section className="staff-complaints-section">
 
-          <div className="staff-section-title-row">
+          <div className="staff-section-header">
 
             <div>
               <h2>
@@ -319,7 +239,18 @@ const StaffDashboard = () => {
               </p>
             </div>
 
+            <button
+              className="staff-view-btn"
+              onClick={() =>
+                navigate("/staff/complaints")
+              }
+            >
+              View All →
+            </button>
+
           </div>
+
+          {/* ================= LOADING ================= */}
 
           {loading ? (
 
@@ -334,7 +265,8 @@ const StaffDashboard = () => {
               </h3>
 
               <p>
-                Please wait while we fetch your assignments.
+                Please wait while your complaints
+                are being loaded.
               </p>
 
             </div>
@@ -344,7 +276,7 @@ const StaffDashboard = () => {
             <div className="staff-empty-state">
 
               <div className="staff-empty-icon">
-                🎉
+                📋
               </div>
 
               <h3>
@@ -352,8 +284,8 @@ const StaffDashboard = () => {
               </h3>
 
               <p>
-                You currently don't have any active complaints
-                assigned to you.
+                New complaints assigned to you
+                will appear here.
               </p>
 
             </div>
@@ -362,74 +294,70 @@ const StaffDashboard = () => {
 
             <div className="staff-complaints-list">
 
-              {complaints.map((complaint) => (
+              {complaints
+                .slice(0, 5)
+                .map((complaint) => (
 
-                <div
-                  className="staff-complaint-card"
-                  key={complaint._id}
-                >
+                  <div
+                    className="staff-complaint-card"
+                    key={complaint._id}
+                  >
 
-                  <div className="staff-complaint-content">
+                    <div className="staff-complaint-main">
 
-                    <div className="staff-complaint-top">
+                      <div>
 
-                      <h3>
-                        {complaint.title}
-                      </h3>
+                        <span className="staff-category">
+                          {complaint.category}
+                        </span>
 
-                      <span
-                        className={`staff-priority ${complaint.priority}`}
-                      >
-                        {complaint.priority}
-                      </span>
+                        <h3>
+                          {complaint.title}
+                        </h3>
+
+                        <p>
+                          📍{" "}
+                          {complaint.location ||
+                            "Location not provided"}
+                        </p>
+
+                      </div>
+
+                      <div className="staff-complaint-meta">
+
+                        <span
+                          className={`staff-priority ${complaint.priority}`}
+                        >
+                          {complaint.priority}
+                        </span>
+
+                        <span
+                          className={`staff-status ${complaint.status}`}
+                        >
+                          {complaint.status?.replace(
+                            "_",
+                            " "
+                          )}
+                        </span>
+
+                      </div>
 
                     </div>
-
-                    <p className="staff-complaint-description">
-                      {complaint.description}
-                    </p>
-
-                    <div className="staff-complaint-details">
-
-                      <span>
-                        📍 {complaint.location}
-                      </span>
-
-                      <span>
-                        🏷️ {complaint.category}
-                      </span>
-
-                    </div>
-
-                  </div>
-
-                  <div className="staff-complaint-meta">
-
-                    <span
-                      className={`staff-status ${complaint.status}`}
-                    >
-                      {complaint.status.replace(
-                        "_",
-                        " "
-                      )}
-                    </span>
 
                     <button
-                      className="staff-view-button"
+                      className="staff-details-btn"
                       onClick={() =>
                         navigate(
                           `/staff/complaints/${complaint._id}`
                         )
                       }
                     >
-                      View Details
+                      View Details →
                     </button>
 
                   </div>
 
-                </div>
-
-              ))}
+                ))}
 
             </div>
 
@@ -437,7 +365,7 @@ const StaffDashboard = () => {
 
         </section>
 
-            </main>
+      </main>
 
       {/* ================= FOOTER ================= */}
 
@@ -462,4 +390,3 @@ const StaffDashboard = () => {
 };
 
 export default StaffDashboard;
-

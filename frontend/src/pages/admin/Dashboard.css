@@ -672,3 +672,20 @@
     padding: 16px 13px;
   }
 }
+
+.admin-logout-btn {
+  border: 1px solid #ef4444;
+  background: transparent;
+  color: #ef4444;
+  padding: 9px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.admin-logout-btn:hover {
+  background: #ef4444;
+  color: #fff;
+}

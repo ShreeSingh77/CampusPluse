@@ -27,6 +27,7 @@ import StaffProfile from "./pages/staff/Profile";
 import AdminComplaints from "./pages/admin/Complaints";
 import AdminComplaintDetails from "./pages/admin/ComplaintDetails";
 import StaffManagement from "./pages/admin/StaffManagement";
+import AdminProfile from "./pages/admin/AdminProfile";
 // Home Page
 // Home Page
 const Home = () => {
@@ -392,6 +393,10 @@ function App() {
       <AdminComplaintDetails />
     </ProtectedRoute>
   }
+/>
+<Route
+  path="/admin/profile"
+  element={<AdminProfile />}
 />
 <Route
   path="/admin/staff"

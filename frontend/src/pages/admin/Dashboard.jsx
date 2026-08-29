@@ -4,10 +4,13 @@ import "./Dashboard.css";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user , logout } = useAuth();
 
   const adminName = user?.name || "Administrator";
-
+const handleLogout = async () => {
+  await logout();
+  navigate("/login");
+};
   return (
     <div className="admin-dashboard-page">
 
@@ -54,7 +57,12 @@ const AdminDashboard = () => {
           >
             Profile
           </button>
-
+     <button
+  onClick={handleLogout}
+  className="admin-logout-btn"
+>
+  Logout
+</button>
         </div>
 
       </nav>
