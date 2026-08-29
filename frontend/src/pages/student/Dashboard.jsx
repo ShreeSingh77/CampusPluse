@@ -1,16 +1,56 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
+import api from "../../services/api";
 import "./Dashboard.css";
-
+import { useNavigate } from "react-router-dom";
 function StudentDashboard() {
+    const navigate = useNavigate();
   const { user, logout } = useAuth();
 
   const [menuOpen, setMenuOpen] = useState(false);
+  const [complaints, setComplaints] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const closeMenu = () => {
     setMenuOpen(false);
   };
 
+  useEffect(() => {
+  const fetchComplaints = async () => {
+    try {
+      const response = await api.get("/complaints/my");
+
+      setComplaints(response.data.complaints || []);
+    } catch (error) {
+      console.error("Fetch complaints error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchComplaints();
+}, []);
+
+const totalComplaints = complaints.length;
+
+const pendingComplaints = complaints.filter(
+  (complaint) =>
+    complaint.status === "submitted" ||
+    complaint.status === "under_review"
+).length;
+
+const inProgressComplaints = complaints.filter(
+  (complaint) =>
+    complaint.status === "assigned" ||
+    complaint.status === "in_progress"
+).length;
+
+const resolvedComplaints = complaints.filter(
+  (complaint) => complaint.status === "resolved"
+).length;
+
+
+const recentComplaints = complaints.slice(0, 5);
   return (
     <div className="student-dashboard">
 
@@ -30,9 +70,12 @@ function StudentDashboard() {
             Dashboard
           </button>
 
-          <button className="navbar-link">
-            My Complaints
-          </button>
+          <button
+  className="navbar-link"
+  onClick={() => navigate("/student/complaints")}
+>
+  My Complaints
+</button>
 
           <button className="navbar-link">
             Notifications
@@ -90,11 +133,14 @@ function StudentDashboard() {
             </button>
 
             <button
-              className="mobile-nav-link"
-              onClick={closeMenu}
-            >
-              My Complaints
-            </button>
+  className="mobile-nav-link"
+  onClick={() => {
+    closeMenu();
+    navigate("/student/complaints");
+  }}
+>
+  My Complaints
+</button>
 
             <button
               className="mobile-nav-link"
@@ -149,9 +195,12 @@ function StudentDashboard() {
 
           </div>
 
-          <button className="new-complaint-btn">
-            + New Complaint
-          </button>
+          <button
+  className="new-complaint-btn"
+  onClick={() => navigate("/student/complaints/new")}
+>
+  + New Complaint
+</button>
 
         </section>
 
@@ -167,7 +216,7 @@ function StudentDashboard() {
 
             <div>
               <p>Total Complaints</p>
-              <h2>0</h2>
+          <h2>{totalComplaints}</h2>
             </div>
 
           </div>
@@ -181,7 +230,7 @@ function StudentDashboard() {
 
             <div>
               <p>Pending</p>
-              <h2>0</h2>
+             <h2>{pendingComplaints}</h2>
             </div>
 
           </div>
@@ -195,7 +244,7 @@ function StudentDashboard() {
 
             <div>
               <p>In Progress</p>
-              <h2>0</h2>
+              <h2>{inProgressComplaints}</h2>
             </div>
 
           </div>
@@ -209,7 +258,7 @@ function StudentDashboard() {
 
             <div>
               <p>Resolved</p>
-              <h2>0</h2>
+             <h2>{resolvedComplaints}</h2>
             </div>
 
           </div>
@@ -234,32 +283,96 @@ function StudentDashboard() {
 
             </div>
 
-            <button className="view-all-btn">
-              View All
-            </button>
-
+            <button
+  className="view-all-btn"
+  onClick={() => navigate("/student/complaints")}
+>
+  View All
+</button>
           </div>
 
 
-          <div className="empty-state">
+          {loading ? (
+  <div className="empty-state">
+    <div className="empty-icon">⏳</div>
 
-            <div className="empty-icon">
-              📋
-            </div>
+    <h3>Loading complaints...</h3>
 
-            <h3>
-              No complaints yet
-            </h3>
+    <p>
+      Please wait while we fetch your complaints.
+    </p>
+  </div>
+) : recentComplaints.length === 0 ? (
+  <div className="empty-state">
 
-            <p>
-              You haven't submitted any complaints yet.
-            </p>
+    <div className="empty-icon">
+      📋
+    </div>
 
-            <button className="empty-action-btn">
-              Submit Your First Complaint
-            </button>
+    <h3>
+      No complaints yet
+    </h3>
 
-          </div>
+    <p>
+      You haven't submitted any complaints yet.
+    </p>
+
+    <button
+      className="empty-action-btn"
+      onClick={() =>
+        navigate("/student/complaints/new")
+      }
+    >
+      Submit Your First Complaint
+    </button>
+
+  </div>
+) : (
+  <div className="complaints-list">
+
+    {recentComplaints.map((complaint) => (
+      <div
+        className="complaint-card"
+        key={complaint._id}
+      >
+
+        <div className="complaint-card-content">
+
+          <h3>
+            {complaint.title}
+          </h3>
+
+          <p>
+            {complaint.description}
+          </p>
+
+          <span>
+            📍 {complaint.location}
+          </span>
+
+        </div>
+
+        <div className="complaint-card-meta">
+
+          <span
+            className={`complaint-status ${complaint.status}`}
+          >
+            {complaint.status.replace("_", " ")}
+          </span>
+
+          <span
+            className={`complaint-priority ${complaint.priority}`}
+          >
+            {complaint.priority}
+          </span>
+
+        </div>
+
+      </div>
+    ))}
+
+  </div>
+)}
 
         </section>
 

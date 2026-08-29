@@ -3,17 +3,19 @@ import { useAuth } from "./context/AuthContext";
 import "./App.css";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
-
+import { Toaster } from "react-hot-toast";
 
 
 import StudentDashboard from "./pages/student/Dashboard";
 import AdminDashboard from "./pages/admin/Dashboard";
-
+import NewComplaint from "./pages/student/NewComplaint";
+import MyComplaints from "./pages/student/MyComplaints";
 // Temporary Staff Dashboard
 const StaffDashboard = () => {
   const { user } = useAuth();
 
   return (
+    
     <div className="dashboard-page">
       <div className="dashboard-card">
         <h1>Staff Dashboard</h1>
@@ -256,47 +258,70 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
 };
 function App() {
   return (
-    <Routes>
-      {/* Public Routes */}
-      <Route path="/" element={<Home />} />
+    <>
+      <Toaster position="top-right" />
 
-      <Route path="/login" element={<Login />} />
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/" element={<Home />} />
 
-      <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
 
-      {/* Student */}
-      <Route
-        path="/student/dashboard"
-        element={
-          <ProtectedRoute allowedRoles={["student"]}>
-            <StudentDashboard />
-          </ProtectedRoute>
-        }
-      />
+        <Route path="/register" element={<Register />} />
 
-      {/* Staff */}
-      <Route
-        path="/staff/dashboard"
-        element={
-          <ProtectedRoute allowedRoles={["staff"]}>
-            <StaffDashboard />
-          </ProtectedRoute>
-        }
-      />
+        {/* Student */}
+        <Route
+          path="/student/dashboard"
+          element={
+            <ProtectedRoute allowedRoles={["student"]}>
+              <StudentDashboard />
+            </ProtectedRoute>
+          }
+        />
 
-      {/* Admin */}
-      <Route
-        path="/admin/dashboard"
-        element={
-          <ProtectedRoute allowedRoles={["admin", "super_admin"]}>
-            <AdminDashboard />
-          </ProtectedRoute>
-        }
-      />
+        {/* New Complaint */}
+        <Route
+          path="/student/complaints/new"
+          element={
+            <ProtectedRoute allowedRoles={["student"]}>
+              <NewComplaint />
+            </ProtectedRoute>
+          }
+        />
 
-      {/* Unknown Route */}
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+
+       <Route
+  path="/student/complaints"
+  element={
+    <ProtectedRoute allowedRoles={["student"]}>
+      <MyComplaints />
+    </ProtectedRoute>
+  }
+/>
+        {/* Staff */}
+        <Route
+          path="/staff/dashboard"
+          element={
+            <ProtectedRoute allowedRoles={["staff"]}>
+              <StaffDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Admin */}
+        <Route
+          path="/admin/dashboard"
+          element={
+            <ProtectedRoute allowedRoles={["admin", "super_admin"]}>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Unknown Route */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </>
   );
 }
 

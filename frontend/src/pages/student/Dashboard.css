@@ -1086,3 +1086,136 @@ select {
     grid-template-columns: 1fr;
   }
 }
+/* =========================================================
+   RECENT COMPLAINTS LIST
+   ========================================================= */
+
+.complaints-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.complaint-card {
+  width: 100%;
+  min-width: 0;
+  padding: 18px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.complaint-card-content {
+  min-width: 0;
+  flex: 1;
+}
+
+.complaint-card-content h3 {
+  margin: 0 0 6px;
+  font-size: 16px;
+  color: #111827;
+  overflow-wrap: anywhere;
+}
+
+.complaint-card-content p {
+  margin: 0 0 8px;
+  font-size: 13px;
+  color: #6b7280;
+  overflow-wrap: anywhere;
+}
+
+.complaint-card-content span {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.complaint-card-meta {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.complaint-status,
+.complaint-priority {
+  padding: 6px 9px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.complaint-status.submitted {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.complaint-status.under_review {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.complaint-status.assigned {
+  background: #ede9fe;
+  color: #6d28d9;
+}
+
+.complaint-status.in_progress {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.complaint-status.resolved {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.complaint-status.rejected {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.complaint-priority.low {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.complaint-priority.medium {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.complaint-priority.high {
+  background: #ffedd5;
+  color: #c2410c;
+}
+
+.complaint-priority.urgent {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 600px) {
+
+  .complaint-card {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
+    padding: 15px;
+  }
+
+  .complaint-card-meta {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+}
