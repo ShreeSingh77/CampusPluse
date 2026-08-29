@@ -2,7 +2,7 @@ const Complaint = require("../models/Complaint");
 const User = require("../models/User");
 const calculateComplaintPriority = require("../utils/complaintPriority");
 const findAvailableStaff = require("../utils/assignComplaintStaff");
-
+const Notification = require("../models/Notification");
 
 const createComplaint = async (req, res) => {
   try {
@@ -204,10 +204,22 @@ const getAssignedComplaints = async (req, res) => {
 // ADMIN → ASSIGN COMPLAINT
 // ==========================================
 
+// ==========================================
+// ADMIN → ASSIGN COMPLAINT
+// ==========================================
+
+// ==========================================
+// ADMIN → ASSIGN COMPLAINT
+// ==========================================
+
 const assignComplaint = async (req, res) => {
   try {
     const { id } = req.params;
     const { staffId } = req.body;
+
+    // ------------------------------------------
+    // VALIDATE STAFF ID
+    // ------------------------------------------
 
     if (!staffId) {
       return res.status(400).json({
@@ -216,7 +228,10 @@ const assignComplaint = async (req, res) => {
       });
     }
 
-    
+    // ------------------------------------------
+    // FIND COMPLAINT
+    // ------------------------------------------
+
     const complaint = await Complaint.findById(id);
 
     if (!complaint) {
@@ -226,7 +241,22 @@ const assignComplaint = async (req, res) => {
       });
     }
 
-    // Verify staff
+    // ------------------------------------------
+    // COMPLAINT DEPARTMENT CHECK
+    // ------------------------------------------
+
+    if (!complaint.department) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Complaint department is not assigned",
+      });
+    }
+
+    // ------------------------------------------
+    // FIND STAFF
+    // ------------------------------------------
+
     const staff = await User.findOne({
       _id: staffId,
       role: "staff",
@@ -236,15 +266,30 @@ const assignComplaint = async (req, res) => {
     if (!staff) {
       return res.status(400).json({
         success: false,
-        message: "Invalid or inactive staff member",
+        message:
+          "Invalid or inactive staff member",
       });
     }
 
-    // Department-aware assignment
+    // ------------------------------------------
+    // STAFF DEPARTMENT CHECK
+    // ------------------------------------------
+
+    if (!staff.department) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Staff department is not assigned",
+      });
+    }
+
+    // ------------------------------------------
+    // DEPARTMENT MATCH
+    // ------------------------------------------
+
     if (
-      !staff.department ||
       staff.department.toString() !==
-        complaint.department.toString()
+      complaint.department.toString()
     ) {
       return res.status(400).json({
         success: false,
@@ -253,33 +298,75 @@ const assignComplaint = async (req, res) => {
       });
     }
 
-    // Assign complaint
-    complaint.assignedTo = staff._id;
-    complaint.status = "assigned";
-
-    await complaint.save();
+    // ------------------------------------------
+    // ASSIGN COMPLAINT
+    // ------------------------------------------
 
     const updatedComplaint =
-      await Complaint.findById(id)
+      await Complaint.findByIdAndUpdate(
+        id,
+        {
+          $set: {
+            assignedTo: staff._id,
+            status: "assigned",
+          },
+        },
+        {
+          new: true,
+        }
+      )
         .populate(
           "reportedBy",
-          "name email role department"
+          "name email phone role department"
         )
         .populate(
           "assignedTo",
-          "name email role department"
+          "name email department role"
         )
         .populate(
           "department",
           "name code description"
         );
 
+    // ------------------------------------------
+    // STAFF NOTIFICATION
+    // ------------------------------------------
+
+    await Notification.create({
+      recipient: staff._id,
+      complaint: complaint._id,
+      type: "complaint_assigned",
+      title: "📋 New Complaint Assigned",
+      message: `Complaint "${complaint.title}" has been assigned to you.`,
+      isRead: false,
+    });
+
+    // ------------------------------------------
+    // STUDENT NOTIFICATION
+    // ------------------------------------------
+
+    await Notification.create({
+      recipient: complaint.reportedBy,
+      complaint: complaint._id,
+      type: "complaint_status_updated",
+      title: "📢 Complaint Assigned",
+      message: `Your complaint "${complaint.title}" has been assigned to the concerned staff.`,
+      isRead: false,
+    });
+
+    // ------------------------------------------
+    // RESPONSE
+    // ------------------------------------------
+
     return res.status(200).json({
       success: true,
-      message: "Complaint assigned successfully",
+      message:
+        "Complaint assigned successfully",
       complaint: updatedComplaint,
     });
+
   } catch (error) {
+
     console.error(
       "Assign Complaint Error:",
       error.message
@@ -291,6 +378,7 @@ const assignComplaint = async (req, res) => {
     });
   }
 };
+
 
 const autoAssignComplaint = async (req, res) => {
   try {

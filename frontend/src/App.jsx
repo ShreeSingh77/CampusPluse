@@ -20,6 +20,12 @@ import StaffComplaints from "./pages/staff/Complaints";
 import StaffComplaintDetails from "./pages/staff/ComplaintDetails";
 import StaffNotifications from "./pages/staff/Notifications";
 import StaffProfile from "./pages/staff/Profile";
+
+
+
+//admin
+import AdminComplaints from "./pages/admin/Complaints";
+import AdminComplaintDetails from "./pages/admin/ComplaintDetails";
 // Home Page
 // Home Page
 const Home = () => {
@@ -370,7 +376,22 @@ function App() {
             </ProtectedRoute>
           }
         />
-
+        <Route
+  path="/admin/complaints"
+  element={
+    <ProtectedRoute allowedRoles={["admin", "super_admin"]}>
+      <AdminComplaints />
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/admin/complaints/:id"
+  element={
+    <ProtectedRoute allowedRoles={["admin", "super_admin"]}>
+      <AdminComplaintDetails />
+    </ProtectedRoute>
+  }
+/>
         {/* Unknown Route */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

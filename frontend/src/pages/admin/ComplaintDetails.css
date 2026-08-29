@@ -1,0 +1,948 @@
+/* =========================================================
+   CAMPUSPULSE - ADMIN COMPLAINT DETAILS
+   ========================================================= */
+
+.admin-details-page {
+  width: 100%;
+  min-height: 100vh;
+  padding: 40px;
+  background: #f5f7fb;
+  box-sizing: border-box;
+  overflow-x: clip;
+}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.admin-details-header {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto 28px;
+}
+
+.admin-back-link {
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 8px 0;
+  border: none;
+  background: transparent;
+  color: #64748b;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.admin-back-link:hover {
+  color: #2563eb;
+  transform: translateX(-2px);
+}
+
+.admin-page-label {
+  margin: 0 0 6px;
+  color: #2563eb;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.admin-details-header h1 {
+  margin: 0;
+  color: #111827;
+  font-size: 32px;
+  font-weight: 800;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.admin-header-description {
+  margin: 8px 0 0;
+  color: #6b7280;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* =========================================================
+   MAIN LAYOUT
+   ========================================================= */
+
+.admin-details-layout {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+
+  gap: 22px;
+  align-items: start;
+}
+
+/* =========================================================
+   MAIN CARD
+   ========================================================= */
+
+.admin-details-main-card {
+  min-width: 0;
+
+  padding: 28px;
+
+  background: #ffffff;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+
+  box-shadow: 0 4px 15px rgba(15, 23, 42, 0.04);
+
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   TITLE
+   ========================================================= */
+
+.admin-title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 18px;
+
+  padding-bottom: 22px;
+
+  border-bottom: 1px solid #eef2f7;
+}
+
+.admin-category {
+  margin: 0 0 6px;
+
+  color: #2563eb;
+
+  font-size: 11px;
+  font-weight: 800;
+
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.admin-title-row h2 {
+  margin: 0;
+
+  color: #111827;
+
+  font-size: 23px;
+  font-weight: 800;
+  line-height: 1.35;
+
+  overflow-wrap: anywhere;
+}
+
+/* =========================================================
+   STATUS BADGE
+   ========================================================= */
+
+.admin-status-badge {
+  flex-shrink: 0;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 7px 11px;
+
+  border-radius: 8px;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  text-transform: capitalize;
+
+  white-space: nowrap;
+}
+
+.admin-status-badge.submitted {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.admin-status-badge.under_review {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.admin-status-badge.assigned {
+  background: #ede9fe;
+  color: #6d28d9;
+}
+
+.admin-status-badge.in_progress {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.admin-status-badge.resolved {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.admin-status-badge.rejected {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* =========================================================
+   SECTIONS
+   ========================================================= */
+
+.admin-details-section {
+  padding: 22px 0;
+
+  border-bottom: 1px solid #eef2f7;
+}
+
+.admin-details-section:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.admin-details-section h3 {
+  margin: 0 0 12px;
+
+  color: #1f2937;
+
+  font-size: 15px;
+  font-weight: 750;
+}
+
+/* =========================================================
+   DESCRIPTION
+   ========================================================= */
+
+.admin-description {
+  margin: 0;
+
+  color: #64748b;
+
+  font-size: 14px;
+  line-height: 1.7;
+
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* =========================================================
+   INFORMATION GRID
+   ========================================================= */
+
+.admin-info-grid {
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 12px;
+}
+
+.admin-info-box {
+  min-width: 0;
+
+  padding: 14px;
+
+  background: #f8fafc;
+
+  border: 1px solid #eef2f7;
+
+  border-radius: 10px;
+
+  box-sizing: border-box;
+}
+
+.admin-info-box span {
+  display: block;
+
+  margin-bottom: 6px;
+
+  color: #64748b;
+
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.admin-info-box strong {
+  display: block;
+
+  color: #1f2937;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  overflow-wrap: anywhere;
+}
+
+/* =========================================================
+   PRIORITY
+   ========================================================= */
+
+.admin-priority {
+  text-transform: capitalize;
+}
+
+.admin-priority.low {
+  color: #475569;
+}
+
+.admin-priority.medium {
+  color: #b45309;
+}
+
+.admin-priority.high {
+  color: #c2410c;
+}
+
+.admin-priority.urgent {
+  color: #b91c1c;
+}
+
+/* =========================================================
+   PERSON BOX
+   ========================================================= */
+
+.admin-person-box {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 14px;
+
+  background: #f8fafc;
+
+  border: 1px solid #eef2f7;
+
+  border-radius: 10px;
+
+  min-width: 0;
+}
+
+.admin-person-avatar {
+  flex-shrink: 0;
+
+  width: 40px;
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #dbeafe;
+
+  color: #1d4ed8;
+
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.admin-person-box > div:last-child {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 3px;
+}
+
+.admin-person-box strong {
+  color: #1f2937;
+
+  font-size: 13px;
+  font-weight: 750;
+
+  overflow-wrap: anywhere;
+}
+
+.admin-person-box span {
+  color: #64748b;
+
+  font-size: 12px;
+
+  overflow-wrap: anywhere;
+}
+
+/* =========================================================
+   UNASSIGNED
+   ========================================================= */
+
+.admin-unassigned {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 12px;
+
+  padding: 15px;
+
+  background: #fff7ed;
+
+  border: 1px solid #fed7aa;
+
+  border-radius: 10px;
+}
+
+.admin-unassigned > span {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.admin-unassigned strong {
+  display: block;
+
+  color: #c2410c;
+
+  font-size: 13px;
+}
+
+.admin-unassigned p {
+  margin: 4px 0 0;
+
+  color: #7c2d12;
+
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* =========================================================
+   PRIORITY REASON
+   ========================================================= */
+
+.admin-priority-reason {
+  padding: 13px 15px;
+
+  background: #eff6ff;
+
+  border: 1px solid #dbeafe;
+
+  border-radius: 9px;
+
+  color: #1e40af;
+
+  font-size: 13px;
+  line-height: 1.5;
+
+  overflow-wrap: anywhere;
+}
+
+/* =========================================================
+   ESCALATION
+   ========================================================= */
+
+.admin-escalation-box {
+  padding: 15px;
+
+  background: #fff7ed;
+
+  border: 1px solid #fed7aa;
+
+  border-radius: 10px;
+}
+
+.admin-escalation-box strong {
+  display: block;
+
+  color: #c2410c;
+
+  font-size: 14px;
+}
+
+.admin-escalation-box p {
+  margin: 7px 0 0;
+
+  color: #7c2d12;
+
+  font-size: 12px;
+}
+
+/* =========================================================
+   ASSIGNMENT CARD
+   ========================================================= */
+
+.admin-assignment-card {
+  position: sticky;
+  top: 20px;
+
+  min-width: 0;
+
+  padding: 22px;
+
+  background: #ffffff;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 14px;
+
+  box-shadow: 0 4px 15px rgba(15, 23, 42, 0.04);
+
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   ASSIGNMENT HEADING
+   ========================================================= */
+
+.assignment-heading {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 11px;
+
+  margin-bottom: 20px;
+}
+
+.assignment-icon {
+  flex-shrink: 0;
+
+  width: 36px;
+  height: 36px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #eff6ff;
+
+  border-radius: 9px;
+
+  font-size: 17px;
+}
+
+.assignment-heading h3 {
+  margin: 0;
+
+  color: #111827;
+
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.assignment-heading p {
+  margin: 5px 0 0;
+
+  color: #64748b;
+
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* =========================================================
+   CURRENT ASSIGNMENT
+   ========================================================= */
+
+.current-assignment {
+  margin-bottom: 18px;
+
+  padding: 12px 13px;
+
+  background: #f0fdf4;
+
+  border: 1px solid #dcfce7;
+
+  border-radius: 9px;
+}
+
+.current-assignment span {
+  display: block;
+
+  margin-bottom: 4px;
+
+  color: #64748b;
+
+  font-size: 11px;
+}
+
+.current-assignment strong {
+  color: #166534;
+
+  font-size: 13px;
+
+  overflow-wrap: anywhere;
+}
+
+/* =========================================================
+   LABEL
+   ========================================================= */
+
+.admin-assignment-card label {
+  display: block;
+
+  margin-bottom: 7px;
+
+  color: #374151;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* =========================================================
+   SELECT
+   ========================================================= */
+
+.admin-assignment-card select {
+  width: 100%;
+  height: 44px;
+
+  padding: 0 11px;
+
+  border: 1px solid #d1d5db;
+
+  border-radius: 8px;
+
+  background: #ffffff;
+
+  color: #111827;
+
+  font-family: inherit;
+
+  font-size: 13px;
+
+  outline: none;
+
+  box-sizing: border-box;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.admin-assignment-card select:focus {
+  border-color: #2563eb;
+
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.admin-assignment-card select:disabled {
+  cursor: not-allowed;
+
+  background: #f8fafc;
+}
+
+/* =========================================================
+   ASSIGN BUTTON
+   ========================================================= */
+
+.admin-assign-btn {
+  width: 100%;
+  min-height: 44px;
+
+  margin-top: 12px;
+
+  padding: 10px 14px;
+
+  border: 1px solid #2563eb;
+
+  border-radius: 8px;
+
+  background: #2563eb;
+
+  color: #ffffff;
+
+  font-family: inherit;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.admin-assign-btn:hover:not(:disabled) {
+  background: #1d4ed8;
+
+  transform: translateY(-1px);
+}
+
+.admin-assign-btn:disabled {
+  cursor: not-allowed;
+
+  opacity: 0.55;
+}
+
+/* =========================================================
+   DIVIDER
+   ========================================================= */
+
+.assignment-divider {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  margin: 18px 0;
+}
+
+.assignment-divider::before,
+.assignment-divider::after {
+  content: "";
+
+  flex: 1;
+
+  height: 1px;
+
+  background: #e5e7eb;
+}
+
+.assignment-divider span {
+  color: #94a3b8;
+
+  font-size: 10px;
+  font-weight: 700;
+}
+
+/* =========================================================
+   AUTO ASSIGN
+   ========================================================= */
+
+.admin-auto-assign-btn {
+  width: 100%;
+  min-height: 44px;
+
+  padding: 10px 14px;
+
+  border: 1px solid #dbeafe;
+
+  border-radius: 8px;
+
+  background: #eff6ff;
+
+  color: #1d4ed8;
+
+  font-family: inherit;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.admin-auto-assign-btn:hover:not(:disabled) {
+  background: #dbeafe;
+
+  border-color: #bfdbfe;
+
+  transform: translateY(-1px);
+}
+
+.admin-auto-assign-btn:disabled {
+  cursor: not-allowed;
+
+  opacity: 0.55;
+}
+
+/* =========================================================
+   ASSIGNMENT NOTE
+   ========================================================= */
+
+.assignment-note {
+  margin: 10px 0 0;
+
+  color: #94a3b8;
+
+  font-size: 11px;
+  line-height: 1.5;
+
+  text-align: center;
+}
+
+/* =========================================================
+   EMPTY / LOADING
+   ========================================================= */
+
+.admin-details-empty {
+  width: 100%;
+  max-width: 700px;
+
+  margin: 80px auto;
+
+  padding: 60px 25px;
+
+  background: #ffffff;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 15px;
+
+  text-align: center;
+
+  box-sizing: border-box;
+}
+
+.admin-empty-icon {
+  font-size: 42px;
+}
+
+.admin-details-empty h3 {
+  margin: 12px 0 6px;
+
+  color: #111827;
+
+  font-size: 18px;
+}
+
+.admin-details-empty p {
+  margin: 0;
+
+  color: #64748b;
+
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.admin-back-btn {
+  margin-top: 18px;
+
+  padding: 10px 15px;
+
+  border: none;
+
+  border-radius: 8px;
+
+  background: #2563eb;
+
+  color: #ffffff;
+
+  font-family: inherit;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.admin-back-btn:hover {
+  background: #1d4ed8;
+
+  transform: translateY(-1px);
+}
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+  .admin-details-page {
+    padding: 30px 20px;
+  }
+
+  .admin-details-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .admin-assignment-card {
+    position: static;
+  }
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+  .admin-details-page {
+    padding: 20px 12px;
+  }
+
+  .admin-details-header {
+    margin-bottom: 20px;
+  }
+
+  .admin-back-link {
+    margin-bottom: 16px;
+  }
+
+  .admin-details-header h1 {
+    font-size: 25px;
+  }
+
+  .admin-header-description {
+    font-size: 13px;
+  }
+
+  .admin-details-layout {
+    gap: 14px;
+  }
+
+  .admin-details-main-card {
+    padding: 19px 16px;
+
+    border-radius: 13px;
+  }
+
+  .admin-title-row {
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 11px;
+  }
+
+  .admin-title-row h2 {
+    font-size: 19px;
+  }
+
+  .admin-status-badge {
+    font-size: 11px;
+  }
+
+  .admin-details-section {
+    padding: 18px 0;
+  }
+
+  .admin-description {
+    font-size: 13px;
+  }
+
+  .admin-info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-assignment-card {
+    padding: 19px 16px;
+
+    border-radius: 13px;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 380px) {
+  .admin-details-page {
+    padding: 18px 10px;
+  }
+
+  .admin-details-main-card,
+  .admin-assignment-card {
+    padding: 16px 13px;
+  }
+
+  .admin-title-row h2 {
+    font-size: 18px;
+  }
+
+  .admin-person-box {
+    padding: 12px;
+  }
+
+  .admin-person-avatar {
+    width: 36px;
+    height: 36px;
+  }
+}
