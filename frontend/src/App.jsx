@@ -230,9 +230,17 @@ const Home = () => {
   );
 };
 
-// Protected Route
 const ProtectedRoute = ({ children, allowedRoles }) => {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, loading } = useAuth();
+
+  // Session restore ho raha hai
+  if (loading) {
+    return (
+      <div className="loading-page">
+        <p>Loading CampusPulse...</p>
+      </div>
+    );
+  }
 
   // User logged in nahi hai
   if (!isAuthenticated) {
@@ -246,7 +254,6 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
 
   return children;
 };
-
 function App() {
   return (
     <Routes>
