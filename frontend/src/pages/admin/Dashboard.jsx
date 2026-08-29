@@ -1,16 +1,150 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
 import { useAuth } from "../../context/AuthContext";
+import api from "../../services/api";
 import "./Dashboard.css";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
-  const { user , logout } = useAuth();
+  const { user, logout } = useAuth();
 
   const adminName = user?.name || "Administrator";
-const handleLogout = async () => {
-  await logout();
-  navigate("/login");
-};
+
+  const [complaints, setComplaints] = useState([]);
+  const [staff, setStaff] = useState([]);
+
+  const [loading, setLoading] = useState(true);
+
+  // ==========================================
+  // DASHBOARD DATA
+  // ==========================================
+
+  const fetchDashboardData = async () => {
+    try {
+      setLoading(true);
+
+      const [complaintsResponse, staffResponse] =
+        await Promise.all([
+          api.get("/complaints"),
+          api.get("/users/staff"),
+        ]);
+
+      // Complaints
+      if (complaintsResponse.data.success) {
+        setComplaints(
+          complaintsResponse.data.complaints || []
+        );
+      }
+
+      // Staff
+      if (staffResponse.data.success) {
+        setStaff(
+          staffResponse.data.staff ||
+            staffResponse.data.users ||
+            []
+        );
+      }
+    } catch (error) {
+      console.error(
+        "Admin dashboard data error:",
+        error
+      );
+
+      toast.error(
+        error.response?.data?.message ||
+          "Failed to load dashboard data"
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchDashboardData();
+  }, []);
+
+  // ==========================================
+  // LOGOUT
+  // ==========================================
+
+  const handleLogout = async () => {
+    await logout();
+    navigate("/login");
+  };
+
+  // ==========================================
+  // STATISTICS
+  // ==========================================
+
+  const totalComplaints = complaints.length;
+
+  const pendingComplaints = complaints.filter(
+    (complaint) =>
+      complaint.status === "submitted" ||
+      complaint.status === "under_review" ||
+      complaint.status === "assigned"
+  ).length;
+
+  const inProgressComplaints = complaints.filter(
+    (complaint) =>
+      complaint.status === "in_progress"
+  ).length;
+
+  const escalatedComplaints = complaints.filter(
+    (complaint) =>
+      complaint.isEscalated === true
+  ).length;
+
+  // ==========================================
+  // RECENT COMPLAINTS
+  // ==========================================
+
+  const recentComplaints = [...complaints]
+    .sort(
+      (a, b) =>
+        new Date(b.createdAt) -
+        new Date(a.createdAt)
+    )
+    .slice(0, 5);
+
+  // ==========================================
+  // STATUS FORMATTER
+  // ==========================================
+
+  const formatStatus = (status) => {
+    if (!status) return "Unknown";
+
+    return status
+      .replace(/_/g, " ")
+      .replace(/\b\w/g, (char) =>
+        char.toUpperCase()
+      );
+  };
+
+  // ==========================================
+  // PRIORITY CLASS
+  // ==========================================
+
+  const getPriorityClass = (priority) => {
+    switch (priority) {
+      case "urgent":
+        return "urgent";
+
+      case "high":
+        return "high";
+
+      case "medium":
+        return "medium";
+
+      case "low":
+        return "low";
+
+      default:
+        return "";
+    }
+  };
+
   return (
     <div className="admin-dashboard-page">
 
@@ -25,58 +159,71 @@ const handleLogout = async () => {
         <div className="admin-navbar-actions">
 
           <button
-            onClick={() => navigate("/admin/dashboard")}
+            onClick={() =>
+              navigate("/admin/dashboard")
+            }
             className="admin-nav-btn active"
           >
             Dashboard
           </button>
 
           <button
-            onClick={() => navigate("/admin/complaints")}
+            onClick={() =>
+              navigate("/admin/complaints")
+            }
             className="admin-nav-btn"
           >
             Complaints
           </button>
 
           <button
-            onClick={() => navigate("/admin/notifications")}
+            onClick={() =>
+              navigate("/admin/notifications")
+            }
             className="admin-nav-btn"
           >
             Notifications
           </button>
-           
-           <button
-  onClick={() => navigate("/admin/staff")}
-  className="admin-nav-btn"
->
-  Staff
-</button>
+
           <button
-            onClick={() => navigate("/admin/profile")}
+            onClick={() =>
+              navigate("/admin/staff")
+            }
+            className="admin-nav-btn"
+          >
+            Staff
+          </button>
+
+          <button
+            onClick={() =>
+              navigate("/admin/profile")
+            }
             className="admin-nav-btn"
           >
             Profile
           </button>
-     <button
-  onClick={handleLogout}
-  className="admin-logout-btn"
->
-  Logout
-</button>
+
+          <button
+            onClick={handleLogout}
+            className="admin-logout-btn"
+          >
+            Logout
+          </button>
+
         </div>
 
       </nav>
-
 
       {/* ================= MAIN ================= */}
 
       <main className="admin-dashboard-main">
 
-        {/* WELCOME */}
+        {/* ================= WELCOME ================= */}
 
         <section className="admin-welcome">
 
           <div>
+
             <p className="admin-page-label">
               Admin Dashboard
             </p>
@@ -86,9 +233,11 @@ const handleLogout = async () => {
             </h1>
 
             <p>
-              Monitor campus complaints, manage assignments,
-              and keep campus services running smoothly.
+              Monitor campus complaints, manage
+              assignments, and keep campus services
+              running smoothly.
             </p>
+
           </div>
 
           <div className="admin-welcome-badge">
@@ -98,12 +247,18 @@ const handleLogout = async () => {
 
         </section>
 
-
         {/* ================= STATISTICS ================= */}
 
         <section className="admin-stats-grid">
 
-          <div className="admin-stat-card">
+          {/* TOTAL */}
+
+          <div
+            className="admin-stat-card"
+            onClick={() =>
+              navigate("/admin/complaints")
+            }
+          >
 
             <div className="admin-stat-icon">
               📋
@@ -111,13 +266,24 @@ const handleLogout = async () => {
 
             <div>
               <span>Total Complaints</span>
-              <strong>0</strong>
+
+              <strong>
+                {loading
+                  ? "..."
+                  : totalComplaints}
+              </strong>
             </div>
 
           </div>
 
+          {/* PENDING */}
 
-          <div className="admin-stat-card">
+          <div
+            className="admin-stat-card"
+            onClick={() =>
+              navigate("/admin/complaints")
+            }
+          >
 
             <div className="admin-stat-icon">
               ⏳
@@ -125,13 +291,24 @@ const handleLogout = async () => {
 
             <div>
               <span>Pending</span>
-              <strong>0</strong>
+
+              <strong>
+                {loading
+                  ? "..."
+                  : pendingComplaints}
+              </strong>
             </div>
 
           </div>
 
+          {/* IN PROGRESS */}
 
-          <div className="admin-stat-card">
+          <div
+            className="admin-stat-card"
+            onClick={() =>
+              navigate("/admin/complaints")
+            }
+          >
 
             <div className="admin-stat-icon">
               🔄
@@ -139,13 +316,24 @@ const handleLogout = async () => {
 
             <div>
               <span>In Progress</span>
-              <strong>0</strong>
+
+              <strong>
+                {loading
+                  ? "..."
+                  : inProgressComplaints}
+              </strong>
             </div>
 
           </div>
 
+          {/* ESCALATED */}
 
-          <div className="admin-stat-card">
+          <div
+            className="admin-stat-card"
+            onClick={() =>
+              navigate("/admin/complaints")
+            }
+          >
 
             <div className="admin-stat-icon">
               🚨
@@ -153,59 +341,159 @@ const handleLogout = async () => {
 
             <div>
               <span>Escalated</span>
-              <strong>0</strong>
+
+              <strong>
+                {loading
+                  ? "..."
+                  : escalatedComplaints}
+              </strong>
             </div>
 
           </div>
 
         </section>
 
-
-        {/* ================= MANAGEMENT ================= */}
+        {/* ================= RECENT COMPLAINTS ================= */}
 
         <section className="admin-management-section">
 
           <div className="admin-section-header">
 
             <div>
-              <h2>Complaint Management</h2>
+
+              <h2>
+                Recent Complaints
+              </h2>
 
               <p>
-                Review complaints and manage their assignments.
+                Latest complaints submitted by
+                students.
               </p>
+
             </div>
 
             <button
               className="admin-view-btn"
-              onClick={() => navigate("/admin/complaints")}
+              onClick={() =>
+                navigate("/admin/complaints")
+              }
             >
               View All Complaints →
             </button>
 
           </div>
 
+          {/* LOADING */}
 
-          {/* EMPTY STATE */}
+          {loading ? (
 
-          <div className="admin-empty-state">
+            <div className="admin-empty-state">
 
-            <div className="admin-empty-icon">
-              📋
+              <div className="admin-empty-icon">
+                ⏳
+              </div>
+
+              <h3>
+                Loading complaints...
+              </h3>
+
+              <p>
+                Please wait while dashboard data
+                is loaded.
+              </p>
+
             </div>
 
-            <h3>
-              No complaints to display
-            </h3>
+          ) : recentComplaints.length === 0 ? (
 
-            <p>
-              New complaints submitted by students will
-              appear here for review.
-            </p>
+            /* EMPTY */
 
-          </div>
+            <div className="admin-empty-state">
+
+              <div className="admin-empty-icon">
+                📋
+              </div>
+
+              <h3>
+                No complaints to display
+              </h3>
+
+              <p>
+                New complaints submitted by students
+                will appear here.
+              </p>
+
+            </div>
+
+          ) : (
+
+            /* RECENT COMPLAINT LIST */
+
+            <div className="admin-recent-complaints">
+
+              {recentComplaints.map(
+                (complaint) => (
+
+                  <div
+                    key={complaint._id}
+                    className="admin-recent-complaint"
+                    onClick={() =>
+                      navigate(
+                        `/admin/complaints/${complaint._id}`
+                      )
+                    }
+                  >
+
+                    <div className="recent-complaint-main">
+
+                      <div className="recent-complaint-category">
+                        {complaint.category ||
+                          "General"}
+                      </div>
+
+                      <h3>
+                        {complaint.title}
+                      </h3>
+
+                      <p>
+                        {complaint.reportedBy?.name ||
+                          "Unknown Student"}
+                      </p>
+
+                    </div>
+
+                    <div className="recent-complaint-meta">
+
+                      <span
+                        className={`admin-status-badge ${complaint.status}`}
+                      >
+                        {formatStatus(
+                          complaint.status
+                        )}
+                      </span>
+
+                      {complaint.priority && (
+                        <span
+                          className={`admin-priority ${getPriorityClass(
+                            complaint.priority
+                          )}`}
+                        >
+                          {complaint.priority}
+                        </span>
+                      )}
+
+                    </div>
+
+                  </div>
+
+                )
+              )}
+
+            </div>
+
+          )}
 
         </section>
-
 
         {/* ================= QUICK ACTIONS ================= */}
 
@@ -213,95 +501,188 @@ const handleLogout = async () => {
 
           <div className="admin-section-heading">
 
-            <h2>Quick Actions</h2>
+            <h2>
+              Quick Actions
+            </h2>
 
             <p>
-              Quickly access important administrative tools.
+              Quickly access important
+              administrative tools.
             </p>
 
           </div>
 
-
           <div className="admin-actions-grid">
+
+            {/* COMPLAINTS */}
 
             <button
               className="admin-action-card"
-              onClick={() => navigate("/admin/complaints")}
+              onClick={() =>
+                navigate("/admin/complaints")
+              }
             >
+
               <span className="action-icon">
                 📋
               </span>
 
               <span>
-                <strong>Manage Complaints</strong>
+                <strong>
+                  Manage Complaints
+                </strong>
+
                 <small>
                   Review and assign complaints
                 </small>
               </span>
 
               <b>→</b>
+
             </button>
 
-           <button
-  className="admin-action-card"
-  onClick={() => navigate("/admin/staff")}
->
-  <span className="action-icon">
-    👥
-  </span>
+            {/* STAFF */}
 
-  <span>
-    <strong>Staff Management</strong>
-    <small>
-      Add and manage campus staff
-    </small>
-  </span>
-
-  <b>→</b>
-</button>
             <button
               className="admin-action-card"
-              onClick={() => navigate("/admin/notifications")}
+              onClick={() =>
+                navigate("/admin/staff")
+              }
             >
+
+              <span className="action-icon">
+                👥
+              </span>
+
+              <span>
+                <strong>
+                  Staff Management
+                </strong>
+
+                <small>
+                  Add and manage campus staff
+                </small>
+              </span>
+
+              <b>→</b>
+
+            </button>
+
+            {/* NOTIFICATIONS */}
+
+            <button
+              className="admin-action-card"
+              onClick={() =>
+                navigate(
+                  "/admin/notifications"
+                )
+              }
+            >
+
               <span className="action-icon">
                 🔔
               </span>
 
               <span>
-                <strong>Notifications</strong>
+                <strong>
+                  Notifications
+                </strong>
+
                 <small>
                   Check important alerts
                 </small>
               </span>
 
               <b>→</b>
+
             </button>
 
+            {/* PROFILE */}
 
             <button
               className="admin-action-card"
-              onClick={() => navigate("/admin/profile")}
+              onClick={() =>
+                navigate("/admin/profile")
+              }
             >
+
               <span className="action-icon">
                 👤
               </span>
 
               <span>
-                <strong>My Profile</strong>
+                <strong>
+                  My Profile
+                </strong>
+
                 <small>
                   View account information
                 </small>
               </span>
 
               <b>→</b>
+
             </button>
 
           </div>
 
         </section>
 
-      </main>
+        {/* ================= STAFF OVERVIEW ================= */}
 
+        <section className="admin-staff-overview">
+
+          <div className="admin-section-header">
+
+            <div>
+
+              <h2>
+                Staff Overview
+              </h2>
+
+              <p>
+                Active staff members handling
+                campus complaints.
+              </p>
+
+            </div>
+
+            <button
+              className="admin-view-btn"
+              onClick={() =>
+                navigate("/admin/staff")
+              }
+            >
+              Manage Staff →
+            </button>
+
+          </div>
+
+          <div className="admin-staff-summary">
+
+            <div className="admin-staff-summary-icon">
+              👥
+            </div>
+
+            <div>
+
+              <span>
+                Active Staff Members
+              </span>
+
+              <strong>
+                {loading
+                  ? "..."
+                  : staff.length}
+              </strong>
+
+            </div>
+
+          </div>
+
+        </section>
+
+      </main>
 
       {/* ================= FOOTER ================= */}
 

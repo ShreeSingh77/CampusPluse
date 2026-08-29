@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-hot-toast";
@@ -38,7 +37,8 @@ const StaffComplaintDetails = () => {
 
     fetchComplaint();
   }, [id]);
-const statusOptions = {
+  
+ const statusOptions = {
   submitted: [
     { value: "under_review", label: "Under Review" },
     { value: "assigned", label: "Assigned" },
@@ -63,41 +63,61 @@ const statusOptions = {
   resolved: [],
   rejected: [],
 };
-  const handleStatusUpdate = async () => {
-    if (!status || status === complaint.status) {
-      toast.error("Please select a different status");
-      return;
-    }
+ const handleStatusUpdate = async () => {
+  if (!status || status === complaint.status) {
+    toast.error("Please select a different status");
+    return;
+  }
 
-    try {
-      setUpdating(true);
+  try {
+    setUpdating(true);
 
-      const response = await api.patch(
-        `/complaints/${id}/status`,
-        {
-          status,
-        }
-      );
+    const response = await api.patch(
+      `/complaints/${id}/status`,
+      {
+        status: status,
+      }
+    );
 
-      if (response.data.success) {
-        toast.success("Complaint status updated");
 
+    console.log("STATUS UPDATE RESPONSE:", response.data);
+console.log(
+  "UPDATED STATUS:",
+  response.data.complaint?.status
+);
+    if (response.data.success) {
+      const updatedComplaint =
+        response.data.complaint || response.data.data;
+
+      toast.success("Complaint status updated successfully");
+
+      if (updatedComplaint) {
+        setComplaint(updatedComplaint);
+        setStatus(updatedComplaint.status);
+      } else {
+        // fallback
         setComplaint((prev) => ({
           ...prev,
-          status,
+          status: status,
         }));
-      }
-    } catch (error) {
-      console.error("Update complaint status error:", error);
 
-      toast.error(
-        error.response?.data?.message ||
-          "Failed to update complaint status"
-      );
-    } finally {
-      setUpdating(false);
+        setStatus(status);
+      }
     }
-  };
+  } catch (error) {
+    console.error(
+      "Update complaint status error:",
+      error.response?.data || error
+    );
+
+    toast.error(
+      error.response?.data?.message ||
+        "Failed to update complaint status"
+    );
+  } finally {
+    setUpdating(false);
+  }
+};
 
   if (loading) {
     return (

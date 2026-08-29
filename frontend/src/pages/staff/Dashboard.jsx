@@ -6,10 +6,9 @@ import { useAuth } from "../../context/AuthContext";
 import "./Dashboard.css";
 
 const StaffDashboard = () => {
- 
 
   const navigate = useNavigate();
-  const { user , logout} = useAuth();
+  const { user, logout } = useAuth();
 
   const [complaints, setComplaints] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -21,18 +20,27 @@ const StaffDashboard = () => {
   // ==========================================
 
   useEffect(() => {
+
     const fetchAssignedComplaints = async () => {
+
       try {
+
+        setLoading(true);
+
         const response = await api.get(
           "/complaints/assigned"
         );
 
         if (response.data.success) {
+
           setComplaints(
             response.data.complaints || []
           );
+
         }
+
       } catch (error) {
+
         console.error(
           "Fetch assigned complaints error:",
           error
@@ -42,43 +50,111 @@ const StaffDashboard = () => {
           error.response?.data?.message ||
             "Failed to load complaints"
         );
+
       } finally {
+
         setLoading(false);
+
       }
+
     };
 
     fetchAssignedComplaints();
+
   }, []);
 
   // ==========================================
   // STATISTICS
   // ==========================================
 
-  const totalComplaints = complaints.length;
+  const totalComplaints =
+    complaints.length;
 
-  const pendingComplaints = complaints.filter(
-    (complaint) =>
-      complaint.status === "assigned" ||
-      complaint.status === "under_review"
-  ).length;
+  const pendingComplaints =
+    complaints.filter(
+      (complaint) =>
+        complaint.status === "assigned" ||
+        complaint.status === "under_review"
+    ).length;
 
-  const inProgressComplaints = complaints.filter(
-    (complaint) =>
-      complaint.status === "in_progress"
-  ).length;
+  const inProgressComplaints =
+    complaints.filter(
+      (complaint) =>
+        complaint.status === "in_progress"
+    ).length;
 
-  const urgentComplaints = complaints.filter(
-    (complaint) =>
-      complaint.priority === "urgent"
-  ).length;
-const handleLogout = async () => {
-  await logout();
-  navigate("/login");
-};
+  const urgentComplaints =
+    complaints.filter(
+      (complaint) =>
+        complaint.priority === "urgent"
+    ).length;
+
+
+  // ==========================================
+  // RESOLVED COMPLAINTS
+  // ==========================================
+
+  const resolvedComplaints =
+    complaints.filter(
+      (complaint) =>
+        complaint.status === "resolved"
+    ).length;
+
+  // ==========================================
+  // LOGOUT
+  // ==========================================
+
+  const handleLogout = async () => {
+
+    await logout();
+
+    navigate("/login");
+
+  };
+
+  // ==========================================
+  // STATUS FORMATTER
+  // ==========================================
+
+  const formatStatus = (status) => {
+
+    if (!status) {
+      return "Unknown";
+    }
+
+    return status
+      .replace(/_/g, " ")
+      .replace(/\b\w/g, (char) =>
+        char.toUpperCase()
+      );
+
+  };
+
+  // ==========================================
+  // PRIORITY FORMATTER
+  // ==========================================
+
+  const formatPriority = (priority) => {
+
+    if (!priority) {
+      return "Normal";
+    }
+
+    return priority
+      .replace(/_/g, " ")
+      .replace(/\b\w/g, (char) =>
+        char.toUpperCase()
+      );
+
+  };
+
   return (
+
     <div className="staff-dashboard-page">
 
-      {/* ================= NAVBAR ================= */}
+      {/* ======================================
+          NAVBAR
+      ====================================== */}
 
       <nav className="staff-navbar">
 
@@ -123,21 +199,29 @@ const handleLogout = async () => {
           >
             Profile
           </button>
-        <button
-  className="staff-logout-btn"
-  onClick={handleLogout}
->
-  Logout
-</button>
+
+          <button
+            className="staff-logout-btn"
+            onClick={handleLogout}
+          >
+            Logout
+          </button>
+
         </div>
 
       </nav>
 
-      {/* ================= MAIN ================= */}
+
+      {/* ======================================
+          MAIN
+      ====================================== */}
 
       <main className="staff-dashboard-main">
 
-        {/* ================= WELCOME ================= */}
+
+        {/* ====================================
+            WELCOME
+        ==================================== */}
 
         <section className="staff-welcome">
 
@@ -159,15 +243,26 @@ const handleLogout = async () => {
           </div>
 
           <div className="staff-status-badge">
-            <span>●</span>
+
+            <span>
+              ●
+            </span>
+
             Staff Active
+
           </div>
 
         </section>
 
-        {/* ================= STATISTICS ================= */}
+
+        {/* ====================================
+            STATISTICS
+        ==================================== */}
 
         <section className="staff-stats-grid">
+
+
+          {/* ASSIGNED */}
 
           <div className="staff-stat-card">
 
@@ -176,11 +271,23 @@ const handleLogout = async () => {
             </div>
 
             <div>
-              <span>Assigned Complaints</span>
-              <strong>{totalComplaints}</strong>
+
+              <span>
+                Assigned Complaints
+              </span>
+
+              <strong>
+                {loading
+                  ? "..."
+                  : totalComplaints}
+              </strong>
+
             </div>
 
           </div>
+
+
+          {/* PENDING */}
 
           <div className="staff-stat-card">
 
@@ -189,11 +296,23 @@ const handleLogout = async () => {
             </div>
 
             <div>
-              <span>Pending</span>
-              <strong>{pendingComplaints}</strong>
+
+              <span>
+                Pending
+              </span>
+
+              <strong>
+                {loading
+                  ? "..."
+                  : pendingComplaints}
+              </strong>
+
             </div>
 
           </div>
+
+
+          {/* IN PROGRESS */}
 
           <div className="staff-stat-card">
 
@@ -202,11 +321,23 @@ const handleLogout = async () => {
             </div>
 
             <div>
-              <span>In Progress</span>
-              <strong>{inProgressComplaints}</strong>
+
+              <span>
+                In Progress
+              </span>
+
+              <strong>
+                {loading
+                  ? "..."
+                  : inProgressComplaints}
+              </strong>
+
             </div>
 
           </div>
+
+
+          {/* URGENT */}
 
           <div className="staff-stat-card">
 
@@ -215,21 +346,61 @@ const handleLogout = async () => {
             </div>
 
             <div>
-              <span>Urgent</span>
-              <strong>{urgentComplaints}</strong>
+
+              <span>
+                Urgent
+              </span>
+
+              <strong>
+                {loading
+                  ? "..."
+                  : urgentComplaints}
+              </strong>
+
             </div>
 
           </div>
 
+
+          {/* RESOLVED */}
+
+          <div className="staff-stat-card">
+
+            <div className="staff-stat-icon">
+              ✅
+            </div>
+
+            <div>
+
+              <span>
+                Resolved
+              </span>
+
+              <strong>
+                {loading
+                  ? "..."
+                  : resolvedComplaints}
+              </strong>
+
+            </div>
+
+          </div>
+
+
         </section>
 
-        {/* ================= COMPLAINTS ================= */}
+
+        {/* ====================================
+            ASSIGNED COMPLAINTS
+        ==================================== */}
 
         <section className="staff-complaints-section">
+
 
           <div className="staff-section-header">
 
             <div>
+
               <h2>
                 Assigned Complaints
               </h2>
@@ -237,6 +408,7 @@ const handleLogout = async () => {
               <p>
                 Complaints currently assigned to you.
               </p>
+
             </div>
 
             <button
@@ -250,7 +422,10 @@ const handleLogout = async () => {
 
           </div>
 
-          {/* ================= LOADING ================= */}
+
+          {/* ==================================
+              LOADING
+          ================================== */}
 
           {loading ? (
 
@@ -273,6 +448,11 @@ const handleLogout = async () => {
 
           ) : complaints.length === 0 ? (
 
+
+            /* =================================
+               EMPTY
+            ================================= */
+
             <div className="staff-empty-state">
 
               <div className="staff-empty-icon">
@@ -292,6 +472,11 @@ const handleLogout = async () => {
 
           ) : (
 
+
+            /* =================================
+               COMPLAINT LIST
+            ================================= */
+
             <div className="staff-complaints-list">
 
               {complaints
@@ -305,10 +490,16 @@ const handleLogout = async () => {
 
                     <div className="staff-complaint-main">
 
+
+                      {/* COMPLAINT INFO */}
+
                       <div>
 
                         <span className="staff-category">
-                          {complaint.category}
+
+                          {complaint.category ||
+                            "General"}
+
                         </span>
 
                         <h3>
@@ -323,26 +514,37 @@ const handleLogout = async () => {
 
                       </div>
 
+
+                      {/* META */}
+
                       <div className="staff-complaint-meta">
 
                         <span
-                          className={`staff-priority ${complaint.priority}`}
+                          className={`staff-priority ${
+                            complaint.priority || ""
+                          }`}
                         >
-                          {complaint.priority}
+                          {formatPriority(
+                            complaint.priority
+                          )}
                         </span>
 
                         <span
-                          className={`staff-status ${complaint.status}`}
+                          className={`staff-status ${
+                            complaint.status || ""
+                          }`}
                         >
-                          {complaint.status?.replace(
-                            "_",
-                            " "
+                          {formatStatus(
+                            complaint.status
                           )}
                         </span>
 
                       </div>
 
                     </div>
+
+
+                    {/* DETAILS BUTTON */}
 
                     <button
                       className="staff-details-btn"
@@ -365,9 +567,13 @@ const handleLogout = async () => {
 
         </section>
 
+
       </main>
 
-      {/* ================= FOOTER ================= */}
+
+      {/* ======================================
+          FOOTER
+      ====================================== */}
 
       <footer className="staff-footer">
 
@@ -386,7 +592,9 @@ const handleLogout = async () => {
       </footer>
 
     </div>
+
   );
+
 };
 
 export default StaffDashboard;

@@ -162,13 +162,14 @@ const getAllComplaints = async (req, res) => {
   }
 };
 
+// ==========================================
+// STAFF → GET ASSIGNED COMPLAINTS
+// ==========================================
+
 const getAssignedComplaints = async (req, res) => {
   try {
     const complaints = await Complaint.find({
       assignedTo: req.user._id,
-      status: {
-        $nin: ["resolved", "rejected"],
-      },
     })
       .populate(
         "reportedBy",
@@ -177,6 +178,10 @@ const getAssignedComplaints = async (req, res) => {
       .populate(
         "assignedTo",
         "name email role"
+      )
+      .populate(
+        "department",
+        "name code description"
       )
       .sort({
         priorityScore: -1,
@@ -188,6 +193,7 @@ const getAssignedComplaints = async (req, res) => {
       count: complaints.length,
       complaints,
     });
+
   } catch (error) {
     console.error(
       "Get Assigned Complaints Error:",
@@ -454,10 +460,18 @@ const autoAssignComplaint = async (req, res) => {
 // ADMIN → UPDATE COMPLAINT STATUS
 // ==========================================
 
+// ==========================================
+// UPDATE COMPLAINT STATUS
+// ==========================================
+
 const updateComplaintStatus = async (req, res) => {
   try {
     const { id } = req.params;
     const { status, adminNote } = req.body;
+
+    // ==========================================
+    // ALLOWED STATUSES
+    // ==========================================
 
     const allowedStatuses = [
       "submitted",
@@ -475,8 +489,11 @@ const updateComplaintStatus = async (req, res) => {
       });
     }
 
-    const complaint =
-      await Complaint.findById(id);
+    // ==========================================
+    // FIND COMPLAINT
+    // ==========================================
+
+    const complaint = await Complaint.findById(id);
 
     if (!complaint) {
       return res.status(404).json({
@@ -485,52 +502,132 @@ const updateComplaintStatus = async (req, res) => {
       });
     }
 
+    // ==========================================
+    // STAFF SECURITY CHECK
+    // ==========================================
 
-    // Staff can update only complaints assigned to them
-if (
-  req.user.role === "staff" &&
-  (!complaint.assignedTo ||
-    complaint.assignedTo.toString() !==
-      req.user._id.toString())
-) {
-  return res.status(403).json({
-    success: false,
-    message:
-      "You can update only complaints assigned to you",
-  });
-}
-  const allowedTransitions = {
-  submitted: ["under_review", "assigned", "rejected"],
-  under_review: ["assigned", "rejected"],
-  assigned: ["in_progress", "rejected"],
-  in_progress: ["resolved", "rejected"],
-  resolved: [],
-  rejected: [],
-};
+    if (
+      req.user.role === "staff" &&
+      (
+        !complaint.assignedTo ||
+        complaint.assignedTo.toString() !==
+          req.user._id.toString()
+      )
+    ) {
+      return res.status(403).json({
+        success: false,
+        message:
+          "You can update only complaints assigned to you",
+      });
+    }
 
-if (!allowedTransitions[complaint.status]?.includes(status)) {
-  return res.status(400).json({
-    success: false,
-    message: `Cannot change complaint status from ${complaint.status} to ${status}`,
-  });
-}
+    // ==========================================
+    // VALID STATUS TRANSITIONS
+    // ==========================================
 
-complaint.status = status;
+    const allowedTransitions = {
+      submitted: [
+        "under_review",
+        "assigned",
+        "rejected",
+      ],
 
-if (adminNote) {
-  complaint.adminNote = adminNote;
-}
+      under_review: [
+        "assigned",
+        "rejected",
+      ],
 
-if (status === "resolved") {
-  complaint.resolvedAt = new Date();
+      assigned: [
+        "in_progress",
+        "rejected",
+      ],
 
-  // Stop any future escalation
-  complaint.escalationNextDeadline = null;
-} else {
-  complaint.resolvedAt = null;
-}
+      in_progress: [
+        "resolved",
+        "rejected",
+      ],
+
+      resolved: [],
+
+      rejected: [],
+    };
+
+    // ==========================================
+    // CHECK STATUS TRANSITION
+    // ==========================================
+
+    if (
+      !allowedTransitions[complaint.status]?.includes(
+        status
+      )
+    ) {
+      return res.status(400).json({
+        success: false,
+        message:
+          `Cannot change complaint status from ${complaint.status} to ${status}`,
+      });
+    }
+
+    // ==========================================
+    // UPDATE STATUS
+    // ==========================================
+
+    complaint.status = status;
+
+    if (adminNote) {
+      complaint.adminNote = adminNote;
+    }
+
+    // ==========================================
+    // RESOLVED HANDLING
+    // ==========================================
+
+    if (status === "resolved") {
+      complaint.resolvedAt = new Date();
+
+      // Stop future escalation
+      complaint.escalationNextDeadline = null;
+    } else {
+      complaint.resolvedAt = null;
+    }
+
+    // ==========================================
+    // SAVE COMPLAINT
+    // ==========================================
 
     await complaint.save();
+
+    // ==========================================
+    // STUDENT NOTIFICATION
+    // ==========================================
+
+    if (complaint.reportedBy) {
+      const statusLabels = {
+        submitted: "Submitted",
+        under_review: "Under Review",
+        assigned: "Assigned",
+        in_progress: "In Progress",
+        resolved: "Resolved",
+        rejected: "Rejected",
+      };
+
+      const statusLabel =
+        statusLabels[status] || status;
+
+      await Notification.create({
+        recipient: complaint.reportedBy,
+        complaint: complaint._id,
+        type: "complaint_status_updated",
+        title: "📢 Complaint Status Updated",
+        message:
+          `Your complaint "${complaint.title}" is now ${statusLabel}.`,
+        isRead: false,
+      });
+    }
+
+    // ==========================================
+    // RESPONSE
+    // ==========================================
 
     return res.status(200).json({
       success: true,
@@ -538,6 +635,7 @@ if (status === "resolved") {
         "Complaint status updated successfully",
       complaint,
     });
+
   } catch (error) {
     console.error(
       "Update Complaint Status Error:",
