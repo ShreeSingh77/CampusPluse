@@ -1,103 +1,130 @@
-/* ==========================================
-   STAFF MANAGEMENT PAGE
-========================================== */
+/* =========================================================
+   STAFF MANAGEMENT
+   CampusPulse Admin Panel
+========================================================= */
 
-.staff-management-page {
-  min-height: 100vh;
-  background: #f6f8fc;
-  padding: 40px 6%;
-  color: #172033;
+* {
   box-sizing: border-box;
 }
 
-/* ==========================================
+.staff-management-page {
+  min-height: 100vh;
+  background: #f5f7fb;
+  color: #172033;
+  padding: 42px 5%;
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+}
+
+/* =========================================================
    HEADER
-========================================== */
+========================================================= */
 
 .staff-management-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
   gap: 30px;
-  margin-bottom: 32px;
+  margin-bottom: 30px;
 }
 
 .staff-management-header h1 {
   margin: 8px 0 8px;
-  font-size: 36px;
-  font-weight: 750;
-  letter-spacing: -0.8px;
+  color: #101828;
+  font-size: 34px;
+  line-height: 1.2;
+  font-weight: 800;
+  letter-spacing: -0.7px;
 }
 
 .staff-management-header p:not(.staff-page-label) {
   margin: 0;
-  color: #687386;
-  font-size: 15px;
-  line-height: 1.6;
+  max-width: 680px;
+  color: #667085;
+  font-size: 14px;
+  line-height: 1.65;
 }
 
 .staff-page-label {
   margin: 18px 0 0;
-  color: #5b63d3;
-  font-size: 13px;
-  font-weight: 700;
+  color: #2563eb;
+  font-size: 12px;
+  font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 
-/* ==========================================
+/* =========================================================
    BACK BUTTON
-========================================== */
+========================================================= */
 
 .staff-back-btn {
   border: none;
   background: transparent;
   padding: 0;
-  color: #5b63d3;
-  font-size: 14px;
-  font-weight: 600;
+  color: #2563eb;
+  font-size: 13px;
+  font-weight: 700;
   cursor: pointer;
-  transition: 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .staff-back-btn:hover {
+  color: #1d4ed8;
   transform: translateX(-3px);
 }
 
-/* ==========================================
+/* =========================================================
    ADD STAFF BUTTON
-========================================== */
+========================================================= */
 
 .add-staff-btn {
-  border: none;
-  border-radius: 12px;
-  background: #5b63d3;
-  color: white;
-  padding: 13px 22px;
-  font-size: 14px;
+  border: 1px solid #1d4ed8;
+  border-radius: 10px;
+  background: #2563eb;
+  color: #ffffff;
+  padding: 12px 20px;
+  min-height: 44px;
+  font-size: 13px;
   font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 8px 20px rgba(91, 99, 211, 0.2);
-  transition: all 0.2s ease;
   white-space: nowrap;
+
+  box-shadow:
+    0 7px 18px rgba(37, 99, 235, 0.18);
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .add-staff-btn:hover {
-  background: #4b53c4;
+  background: #1d4ed8;
   transform: translateY(-2px);
+
+  box-shadow:
+    0 10px 24px rgba(37, 99, 235, 0.22);
 }
 
-/* ==========================================
+/* =========================================================
    ADD STAFF CARD
-========================================== */
+========================================================= */
 
 .add-staff-card {
   background: #ffffff;
-  border: 1px solid #e6e9f0;
-  border-radius: 18px;
+  border: 1px solid #e5e9f0;
+  border-radius: 17px;
   padding: 28px;
-  margin-bottom: 32px;
-  box-shadow: 0 8px 30px rgba(30, 40, 70, 0.06);
+  margin-bottom: 28px;
+
+  box-shadow:
+    0 7px 26px rgba(20, 30, 50, 0.05);
+
   animation: staffFormAppear 0.25s ease;
 }
 
@@ -113,45 +140,52 @@
   }
 }
 
-/* ==========================================
+/* =========================================================
    FORM HEADING
-========================================== */
+========================================================= */
 
 .add-staff-heading {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 25px;
+
+  margin-bottom: 24px;
   padding-bottom: 20px;
-  border-bottom: 1px solid #edf0f5;
+
+  border-bottom: 1px solid #eaecf0;
 }
 
 .add-staff-heading h2 {
   margin: 0 0 5px;
-  font-size: 21px;
-  color: #172033;
+  color: #101828;
+  font-size: 20px;
+  font-weight: 750;
 }
 
 .add-staff-heading p {
   margin: 0;
-  color: #7b8495;
-  font-size: 14px;
+  color: #667085;
+  font-size: 13px;
 }
 
 .add-staff-heading > span {
   width: 48px;
   height: 48px;
+
   display: flex;
-  justify-content: center;
   align-items: center;
-  border-radius: 14px;
-  background: #eef0ff;
-  font-size: 23px;
+  justify-content: center;
+
+  border-radius: 13px;
+  background: #eff6ff;
+  border: 1px solid #dbeafe;
+
+  font-size: 22px;
 }
 
-/* ==========================================
+/* =========================================================
    FORM
-========================================== */
+========================================================= */
 
 .staff-form {
   width: 100%;
@@ -159,7 +193,9 @@
 
 .staff-form-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
   gap: 20px;
 }
 
@@ -174,8 +210,8 @@
 }
 
 .staff-form-group label {
-  color: #30394c;
-  font-size: 13px;
+  color: #344054;
+  font-size: 12px;
   font-weight: 700;
 }
 
@@ -183,75 +219,98 @@
 .staff-form-group select {
   width: 100%;
   height: 46px;
+
   padding: 0 14px;
+
   border: 1px solid #dfe3eb;
-  border-radius: 10px;
+  border-radius: 9px;
+
   background: #ffffff;
-  color: #252d3d;
+  color: #1d2939;
+
   font-size: 14px;
   outline: none;
-  box-sizing: border-box;
-  transition: all 0.2s ease;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
 }
 
 .staff-form-group input::placeholder {
-  color: #a0a7b4;
+  color: #98a2b3;
+}
+
+.staff-form-group input:hover,
+.staff-form-group select:hover {
+  border-color: #cbd5e1;
 }
 
 .staff-form-group input:focus,
 .staff-form-group select:focus {
-  border-color: #6971dc;
-  box-shadow: 0 0 0 3px rgba(105, 113, 220, 0.1);
+  border-color: #2563eb;
+
+  box-shadow:
+    0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
 .staff-form-group select {
   cursor: pointer;
 }
 
-/* ==========================================
+/* =========================================================
    FORM ACTIONS
-========================================== */
+========================================================= */
 
 .staff-form-actions {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
+
   margin-top: 26px;
   padding-top: 22px;
-  border-top: 1px solid #edf0f5;
+
+  border-top: 1px solid #eaecf0;
 }
 
 .cancel-staff-btn,
 .save-staff-btn {
   min-width: 125px;
   height: 44px;
-  border-radius: 10px;
+
   padding: 0 18px;
-  font-size: 14px;
+
+  border-radius: 9px;
+
+  font-size: 13px;
   font-weight: 700;
+
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .cancel-staff-btn {
-  border: 1px solid #dce0e8;
+  border: 1px solid #d0d5dd;
   background: #ffffff;
-  color: #596274;
+  color: #475467;
 }
 
 .cancel-staff-btn:hover {
-  background: #f5f6f9;
+  background: #f8fafc;
+  border-color: #98a2b3;
 }
 
 .save-staff-btn {
-  border: none;
-  background: #5b63d3;
-  color: white;
-  box-shadow: 0 7px 18px rgba(91, 99, 211, 0.2);
+  border: 1px solid #1d4ed8;
+  background: #2563eb;
+  color: #ffffff;
+
+  box-shadow:
+    0 6px 16px rgba(37, 99, 235, 0.17);
 }
 
 .save-staff-btn:hover {
-  background: #4b53c4;
+  background: #1d4ed8;
   transform: translateY(-1px);
 }
 
@@ -263,67 +322,91 @@
   transform: none;
 }
 
-/* ==========================================
+/* =========================================================
    STAFF LIST SECTION
-========================================== */
+========================================================= */
 
 .staff-list-section {
   background: #ffffff;
-  border: 1px solid #e6e9f0;
-  border-radius: 18px;
+
+  border: 1px solid #e5e9f0;
+  border-radius: 17px;
+
   overflow: hidden;
-  box-shadow: 0 8px 30px rgba(30, 40, 70, 0.05);
+
+  box-shadow:
+    0 7px 26px rgba(20, 30, 50, 0.045);
 }
 
-/* ==========================================
+/* =========================================================
    LIST HEADER
-========================================== */
+========================================================= */
 
 .staff-list-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 20px;
+
+  gap: 22px;
+
   padding: 24px 26px;
-  border-bottom: 1px solid #edf0f5;
+
+  border-bottom: 1px solid #eaecf0;
 }
 
 .staff-list-header h2 {
   margin: 0 0 5px;
-  font-size: 20px;
+
+  color: #101828;
+  font-size: 19px;
+  font-weight: 750;
 }
 
 .staff-list-header p {
   margin: 0;
-  color: #818a9a;
+
+  color: #667085;
   font-size: 13px;
 }
 
 .staff-search {
-  width: 260px;
+  width: 280px;
   height: 42px;
+
   padding: 0 14px;
+
   border: 1px solid #dfe3eb;
-  border-radius: 10px;
+  border-radius: 9px;
+
+  background: #ffffff;
+  color: #1d2939;
+
+  font-size: 13px;
   outline: none;
-  color: #293246;
-  font-size: 14px;
-  box-sizing: border-box;
-  transition: 0.2s ease;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .staff-search::placeholder {
-  color: #9da5b3;
+  color: #98a2b3;
+}
+
+.staff-search:hover {
+  border-color: #cbd5e1;
 }
 
 .staff-search:focus {
-  border-color: #6971dc;
-  box-shadow: 0 0 0 3px rgba(105, 113, 220, 0.1);
+  border-color: #2563eb;
+
+  box-shadow:
+    0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
-/* ==========================================
+/* =========================================================
    TABLE
-========================================== */
+========================================================= */
 
 .staff-table-wrapper {
   width: 100%;
@@ -332,30 +415,40 @@
 
 .staff-table {
   width: 100%;
+  min-width: 780px;
+
   border-collapse: collapse;
-  min-width: 760px;
 }
 
 .staff-table thead {
-  background: #f8f9fc;
+  background: #f8fafc;
 }
 
 .staff-table th {
-  padding: 15px 20px;
+  padding: 14px 20px;
+
   text-align: left;
-  color: #737d8e;
-  font-size: 12px;
-  font-weight: 750;
+
+  color: #667085;
+
+  font-size: 11px;
+  font-weight: 800;
+
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.55px;
+
   white-space: nowrap;
 }
 
 .staff-table td {
   padding: 17px 20px;
-  border-top: 1px solid #edf0f5;
-  color: #4e586b;
-  font-size: 14px;
+
+  border-top: 1px solid #eaecf0;
+
+  color: #475467;
+
+  font-size: 13px;
+
   vertical-align: middle;
 }
 
@@ -364,86 +457,116 @@
 }
 
 .staff-table tbody tr:hover {
-  background: #fafbfe;
+  background: #f8faff;
 }
 
-/* ==========================================
+/* =========================================================
    STAFF USER CELL
-========================================== */
+========================================================= */
 
 .staff-user-cell {
   display: flex;
   align-items: center;
   gap: 11px;
-  min-width: 170px;
+
+  min-width: 180px;
 }
 
 .staff-user-cell strong {
-  color: #222b3d;
-  font-size: 14px;
+  color: #1d2939;
+  font-size: 13px;
   font-weight: 700;
 }
 
 .staff-avatar {
-  width: 38px;
-  height: 38px;
+  width: 40px;
+  height: 40px;
+
   flex-shrink: 0;
+
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+
   border-radius: 50%;
-  background: #eef0ff;
-  color: #5961ce;
+
+  background: #eff6ff;
+  border: 1px solid #dbeafe;
+
+  color: #2563eb;
+
   font-size: 14px;
   font-weight: 800;
 }
 
-/* ==========================================
+/* =========================================================
    DEPARTMENT BADGE
-========================================== */
+========================================================= */
 
 .department-badge {
   display: inline-flex;
   align-items: center;
+
   padding: 6px 10px;
-  border-radius: 8px;
-  background: #f0f2ff;
-  color: #555fc9;
-  font-size: 12px;
+
+  border-radius: 7px;
+
+  background: #eff6ff;
+  border: 1px solid #dbeafe;
+
+  color: #1d4ed8;
+
+  font-size: 11px;
   font-weight: 700;
+
   white-space: nowrap;
 }
 
-/* ==========================================
+/* =========================================================
    ACTIVE BADGE
-========================================== */
+========================================================= */
 
 .active-badge {
   display: inline-flex;
   align-items: center;
   gap: 5px;
+
   padding: 6px 10px;
-  border-radius: 8px;
-  background: #ecf9f1;
-  color: #27824d;
-  font-size: 12px;
+
+  border-radius: 7px;
+
+  background: #ecfdf3;
+  border: 1px solid #bbf7d0;
+
+  color: #15803d;
+
+  font-size: 11px;
   font-weight: 700;
+
   white-space: nowrap;
 }
 
-/* ==========================================
+.active-badge::first-letter {
+  color: #22c55e;
+}
+
+/* =========================================================
    EMPTY / LOADING
-========================================== */
+========================================================= */
 
 .staff-management-empty {
-  min-height: 260px;
+  min-height: 270px;
+
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
   text-align: center;
+
   padding: 35px 20px;
-  color: #697386;
+
+  color: #667085;
 }
 
 .staff-management-empty > div,
@@ -453,29 +576,32 @@
 
 .staff-management-empty h3 {
   margin: 12px 0 6px;
-  color: #2a3345;
-  font-size: 18px;
+
+  color: #344054;
+
+  font-size: 17px;
+  font-weight: 700;
 }
 
 .staff-management-empty p {
   max-width: 400px;
+
   margin: 0;
-  color: #8a93a2;
-  font-size: 14px;
+
+  color: #98a2b3;
+
+  font-size: 13px;
   line-height: 1.6;
 }
 
-/* ==========================================
-   RESPONSIVE
-========================================== */
+/* =========================================================
+   RESPONSIVE — TABLET
+========================================================= */
 
-@media (max-width: 900px) {
+@media (max-width: 950px) {
+
   .staff-management-page {
-    padding: 30px 4%;
-  }
-
-  .staff-management-header {
-    align-items: flex-start;
+    padding: 32px 4%;
   }
 
   .staff-management-header h1 {
@@ -489,11 +615,20 @@
   .staff-form-group.full-width {
     grid-column: auto;
   }
+
+  .staff-search {
+    width: 240px;
+  }
 }
 
-@media (max-width: 650px) {
+/* =========================================================
+   RESPONSIVE — MOBILE
+========================================================= */
+
+@media (max-width: 680px) {
+
   .staff-management-page {
-    padding: 22px 16px;
+    padding: 24px 16px;
   }
 
   .staff-management-header {
@@ -504,6 +639,10 @@
 
   .staff-management-header h1 {
     font-size: 27px;
+  }
+
+  .staff-management-header p:not(.staff-page-label) {
+    font-size: 13px;
   }
 
   .add-staff-btn {
@@ -517,6 +656,14 @@
 
   .add-staff-heading {
     align-items: flex-start;
+  }
+
+  .add-staff-heading h2 {
+    font-size: 18px;
+  }
+
+  .staff-list-section {
+    border-radius: 14px;
   }
 
   .staff-list-header {
@@ -536,5 +683,45 @@
   .cancel-staff-btn,
   .save-staff-btn {
     width: 100%;
+  }
+
+  .staff-table {
+    min-width: 760px;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 420px) {
+
+  .staff-management-page {
+    padding: 20px 12px;
+  }
+
+  .staff-management-header h1 {
+    font-size: 24px;
+  }
+
+  .staff-page-label {
+    font-size: 11px;
+  }
+
+  .add-staff-card {
+    padding: 17px;
+  }
+
+  .staff-list-header {
+    padding: 17px;
+  }
+
+  .staff-form-grid {
+    gap: 16px;
+  }
+
+  .staff-form-group input,
+  .staff-form-group select {
+    height: 44px;
   }
 }

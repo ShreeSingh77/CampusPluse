@@ -1,6 +1,6 @@
 /* =========================================================
    ADMIN DASHBOARD
-   CampusPulse
+   CampusPulse — Professional Admin UI
 ========================================================= */
 
 * {
@@ -9,7 +9,7 @@
 
 .admin-dashboard-page {
   min-height: 100vh;
-  background: #f5f7fb;
+  background: #f4f7fb;
   color: #172033;
   font-family:
     Inter,
@@ -25,10 +25,10 @@
 ========================================================= */
 
 .admin-navbar {
-  height: 72px;
+  min-height: 72px;
   width: 100%;
-  background: #ffffff;
-  border-bottom: 1px solid #e7eaf0;
+  background: rgba(255, 255, 255, 0.97);
+  border-bottom: 1px solid #e6eaf0;
 
   display: flex;
   align-items: center;
@@ -40,7 +40,7 @@
   top: 0;
   z-index: 100;
 
-  box-shadow: 0 2px 12px rgba(20, 30, 50, 0.04);
+  box-shadow: 0 3px 18px rgba(15, 23, 42, 0.05);
 }
 
 
@@ -49,7 +49,7 @@
 .admin-navbar-brand {
   font-size: 24px;
   font-weight: 800;
-  letter-spacing: -0.6px;
+  letter-spacing: -0.7px;
   color: #1d4ed8;
 }
 
@@ -59,7 +59,7 @@
 .admin-navbar-actions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 
@@ -100,11 +100,11 @@
 
 .admin-logout-btn {
   border: 1px solid #fecaca;
+
   background: #fff7f7;
   color: #dc2626;
 
   padding: 9px 16px;
-
   border-radius: 9px;
 
   font-size: 14px;
@@ -112,9 +112,12 @@
 
   cursor: pointer;
 
-  margin-left: 5px;
+  margin-left: 7px;
 
-  transition: all 0.2s ease;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .admin-logout-btn:hover {
@@ -130,6 +133,7 @@
 
 .admin-dashboard-main {
   width: min(1280px, calc(100% - 64px));
+
   margin: 0 auto;
 
   padding: 42px 0 70px;
@@ -141,52 +145,92 @@
 ========================================================= */
 
 .admin-welcome {
+  position: relative;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
 
   gap: 30px;
 
-  background: linear-gradient(
-    135deg,
-    #ffffff 0%,
-    #f8faff 100%
-  );
+  background:
+    linear-gradient(
+      135deg,
+      #ffffff 0%,
+      #f7faff 55%,
+      #eef4ff 100%
+    );
 
-  border: 1px solid #e5e9f2;
+  border: 1px solid #dfe6f1;
 
-  border-radius: 18px;
+  border-radius: 20px;
 
-  padding: 32px 36px;
+  padding: 34px 38px;
 
   margin-bottom: 28px;
 
+  overflow: hidden;
+
   box-shadow:
-    0 8px 30px rgba(20, 35, 70, 0.05);
+    0 10px 35px rgba(15, 23, 42, 0.055);
 }
 
+
+/* subtle decorative glow */
+
+.admin-welcome::after {
+  content: "";
+
+  position: absolute;
+
+  width: 180px;
+  height: 180px;
+
+  right: -65px;
+  top: -75px;
+
+  border-radius: 50%;
+
+  background: rgba(37, 99, 235, 0.055);
+
+  pointer-events: none;
+}
+
+
+/* PAGE LABEL */
+
 .admin-page-label {
-  margin: 0 0 7px;
+  margin: 0 0 8px;
 
   color: #2563eb;
 
-  font-size: 13px;
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 800;
 
   text-transform: uppercase;
-  letter-spacing: 1px;
+
+  letter-spacing: 1.2px;
 }
+
+
+/* TITLE */
 
 .admin-welcome h1 {
   margin: 0;
 
-  font-size: 31px;
-  line-height: 1.25;
-
   color: #101828;
 
-  letter-spacing: -0.7px;
+  font-size: 32px;
+
+  line-height: 1.25;
+
+  font-weight: 800;
+
+  letter-spacing: -0.8px;
 }
+
+
+/* DESCRIPTION */
 
 .admin-welcome p:not(.admin-page-label) {
   margin: 10px 0 0;
@@ -194,17 +238,22 @@
   color: #667085;
 
   font-size: 15px;
-  line-height: 1.6;
 
-  max-width: 690px;
+  line-height: 1.65;
+
+  max-width: 700px;
 }
 
 
 /* SYSTEM ACTIVE */
 
 .admin-welcome-badge {
+  position: relative;
+  z-index: 2;
+
   display: flex;
   align-items: center;
+
   gap: 9px;
 
   padding: 11px 17px;
@@ -218,13 +267,17 @@
   color: #15803d;
 
   font-size: 13px;
+
   font-weight: 700;
 
   white-space: nowrap;
+
+  box-shadow:
+    0 4px 12px rgba(22, 163, 74, 0.06);
 }
 
 .admin-welcome-badge span {
-  font-size: 12px;
+  font-size: 11px;
   color: #22c55e;
 }
 
@@ -246,13 +299,13 @@
 
 
 .admin-stat-card {
-  min-height: 125px;
+  min-height: 130px;
 
   background: #ffffff;
 
-  border: 1px solid #e7eaf0;
+  border: 1px solid #e5e9f0;
 
-  border-radius: 15px;
+  border-radius: 16px;
 
   padding: 22px;
 
@@ -264,29 +317,29 @@
   cursor: pointer;
 
   box-shadow:
-    0 5px 18px rgba(20, 30, 50, 0.04);
+    0 5px 20px rgba(15, 23, 42, 0.035);
 
   transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease,
-    border-color 0.2s ease;
+    transform 0.22s ease,
+    box-shadow 0.22s ease,
+    border-color 0.22s ease;
 }
 
 .admin-stat-card:hover {
-  transform: translateY(-3px);
+  transform: translateY(-4px);
 
-  border-color: #cbd5e1;
+  border-color: #c9d5e8;
 
   box-shadow:
-    0 12px 28px rgba(20, 30, 50, 0.08);
+    0 14px 32px rgba(15, 23, 42, 0.085);
 }
 
 
-/* ICON */
+/* STAT ICON */
 
 .admin-stat-icon {
-  width: 52px;
-  height: 52px;
+  width: 54px;
+  height: 54px;
 
   flex-shrink: 0;
 
@@ -296,9 +349,20 @@
 
   background: #eef4ff;
 
-  border-radius: 13px;
+  border: 1px solid #e0eaff;
+
+  border-radius: 14px;
 
   font-size: 24px;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
+}
+
+.admin-stat-card:hover .admin-stat-icon {
+  transform: scale(1.05);
+  background: #e6efff;
 }
 
 
@@ -310,9 +374,10 @@
   color: #667085;
 
   font-size: 13px;
+
   font-weight: 600;
 
-  margin-bottom: 7px;
+  margin-bottom: 8px;
 }
 
 .admin-stat-card strong {
@@ -320,15 +385,18 @@
 
   color: #101828;
 
-  font-size: 28px;
+  font-size: 29px;
+
   line-height: 1;
 
   font-weight: 800;
+
+  letter-spacing: -0.5px;
 }
 
 
 /* =========================================================
-   MANAGEMENT SECTION
+   COMMON SECTIONS
 ========================================================= */
 
 .admin-management-section,
@@ -336,24 +404,28 @@
 .admin-staff-overview {
   background: #ffffff;
 
-  border: 1px solid #e5e9f0;
+  border: 1px solid #e4e8ef;
 
-  border-radius: 17px;
+  border-radius: 18px;
 
   padding: 28px;
 
   margin-bottom: 28px;
 
   box-shadow:
-    0 5px 20px rgba(20, 30, 50, 0.035);
+    0 5px 20px rgba(15, 23, 42, 0.035);
 }
 
 
-/* SECTION HEADER */
+/* =========================================================
+   SECTION HEADER
+========================================================= */
 
 .admin-section-header {
   display: flex;
+
   align-items: center;
+
   justify-content: space-between;
 
   gap: 20px;
@@ -368,9 +440,10 @@
   color: #101828;
 
   font-size: 20px;
+
   font-weight: 750;
 
-  letter-spacing: -0.3px;
+  letter-spacing: -0.35px;
 }
 
 .admin-section-header p,
@@ -380,10 +453,14 @@
   color: #667085;
 
   font-size: 14px;
+
+  line-height: 1.5;
 }
 
 
-/* VIEW BUTTON */
+/* =========================================================
+   VIEW BUTTON
+========================================================= */
 
 .admin-view-btn {
   border: 1px solid #bfdbfe;
@@ -397,17 +474,22 @@
   border-radius: 9px;
 
   font-size: 13px;
+
   font-weight: 700;
 
   cursor: pointer;
 
   white-space: nowrap;
 
-  transition: all 0.2s ease;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .admin-view-btn:hover {
   background: #dbeafe;
+
   border-color: #93c5fd;
 
   transform: translateX(2px);
@@ -425,12 +507,14 @@
 
   background: #fafbfc;
 
-  border-radius: 13px;
+  border-radius: 14px;
 
   display: flex;
+
   flex-direction: column;
 
   align-items: center;
+
   justify-content: center;
 
   text-align: center;
@@ -439,20 +523,21 @@
 }
 
 .admin-empty-icon {
-  width: 58px;
-  height: 58px;
+  width: 60px;
+  height: 60px;
 
   display: flex;
+
   align-items: center;
   justify-content: center;
 
-  border-radius: 15px;
+  border-radius: 16px;
 
   background: #eef2f7;
 
   font-size: 25px;
 
-  margin-bottom: 13px;
+  margin-bottom: 14px;
 }
 
 .admin-empty-state h3 {
@@ -471,6 +556,7 @@
   color: #98a2b3;
 
   font-size: 13px;
+
   line-height: 1.6;
 }
 
@@ -481,30 +567,35 @@
 
 .admin-recent-complaints {
   display: flex;
+
   flex-direction: column;
 
   border: 1px solid #eaecf0;
 
-  border-radius: 12px;
+  border-radius: 13px;
 
   overflow: hidden;
 }
+
 
 .admin-recent-complaint {
   display: flex;
 
   align-items: center;
+
   justify-content: space-between;
 
   gap: 20px;
 
-  padding: 18px 20px;
+  padding: 19px 20px;
 
   border-bottom: 1px solid #eaecf0;
 
   cursor: pointer;
 
-  transition: background 0.2s ease;
+  transition:
+    background 0.2s ease,
+    padding-left 0.2s ease;
 }
 
 .admin-recent-complaint:last-child {
@@ -513,6 +604,8 @@
 
 .admin-recent-complaint:hover {
   background: #f8faff;
+
+  padding-left: 24px;
 }
 
 
@@ -529,11 +622,14 @@
 
   background: #eff6ff;
 
+  border: 1px solid #dbeafe;
+
   padding: 4px 9px;
 
   border-radius: 6px;
 
   font-size: 11px;
+
   font-weight: 700;
 
   margin-bottom: 7px;
@@ -547,10 +643,13 @@
   color: #1d2939;
 
   font-size: 15px;
+
   font-weight: 700;
 
   white-space: nowrap;
+
   overflow: hidden;
+
   text-overflow: ellipsis;
 
   max-width: 600px;
@@ -572,7 +671,7 @@
 
   align-items: center;
 
-  gap: 10px;
+  gap: 9px;
 
   flex-shrink: 0;
 }
@@ -606,7 +705,9 @@
 
 .admin-status-badge.submitted {
   color: #92400e;
+
   background: #fffbeb;
+
   border: 1px solid #fde68a;
 }
 
@@ -615,7 +716,9 @@
 
 .admin-status-badge.under_review {
   color: #1e40af;
+
   background: #eff6ff;
+
   border: 1px solid #bfdbfe;
 }
 
@@ -624,7 +727,9 @@
 
 .admin-status-badge.assigned {
   color: #6d28d9;
+
   background: #f5f3ff;
+
   border: 1px solid #ddd6fe;
 }
 
@@ -633,7 +738,9 @@
 
 .admin-status-badge.in_progress {
   color: #0369a1;
+
   background: #f0f9ff;
+
   border: 1px solid #bae6fd;
 }
 
@@ -642,7 +749,9 @@
 
 .admin-status-badge.resolved {
   color: #166534;
+
   background: #f0fdf4;
+
   border: 1px solid #bbf7d0;
 }
 
@@ -651,7 +760,9 @@
 
 .admin-status-badge.rejected {
   color: #b91c1c;
+
   background: #fef2f2;
+
   border: 1px solid #fecaca;
 }
 
@@ -670,26 +781,40 @@
   padding: 5px 9px;
 
   border-radius: 6px;
+
+  border: 1px solid transparent;
 }
 
 .admin-priority.urgent {
   color: #b91c1c;
+
   background: #fef2f2;
+
+  border-color: #fecaca;
 }
 
 .admin-priority.high {
   color: #c2410c;
+
   background: #fff7ed;
+
+  border-color: #fed7aa;
 }
 
 .admin-priority.medium {
   color: #a16207;
+
   background: #fefce8;
+
+  border-color: #fef08a;
 }
 
 .admin-priority.low {
   color: #166534;
+
   background: #f0fdf4;
+
+  border-color: #bbf7d0;
 }
 
 
@@ -733,7 +858,7 @@
 
   border: 1px solid #e5e7eb;
 
-  border-radius: 12px;
+  border-radius: 13px;
 
   cursor: pointer;
 
@@ -749,10 +874,10 @@
 
   border-color: #bfdbfe;
 
-  transform: translateY(-2px);
+  transform: translateY(-3px);
 
   box-shadow:
-    0 8px 20px rgba(30, 64, 175, 0.07);
+    0 9px 22px rgba(30, 64, 175, 0.075);
 }
 
 
@@ -763,12 +888,15 @@
   height: 48px;
 
   display: flex;
+
   align-items: center;
   justify-content: center;
 
   background: #eef4ff;
 
-  border-radius: 11px;
+  border: 1px solid #e0eaff;
+
+  border-radius: 12px;
 
   font-size: 22px;
 }
@@ -786,6 +914,7 @@
   color: #1d2939;
 
   font-size: 14px;
+
   font-weight: 700;
 }
 
@@ -797,6 +926,8 @@
   color: #98a2b3;
 
   font-size: 12px;
+
+  line-height: 1.4;
 }
 
 
@@ -815,7 +946,7 @@
 .admin-action-card:hover b {
   color: #2563eb;
 
-  transform: translateX(3px);
+  transform: translateX(4px);
 }
 
 
@@ -825,30 +956,39 @@
 
 .admin-staff-summary {
   display: flex;
+
   align-items: center;
 
   gap: 17px;
 
   padding: 20px;
 
-  background: #f8faff;
+  background:
+    linear-gradient(
+      135deg,
+      #f8faff,
+      #f3f7ff
+    );
 
-  border: 1px solid #e1e9ff;
+  border: 1px solid #dfe8fb;
 
-  border-radius: 13px;
+  border-radius: 14px;
 }
 
 .admin-staff-summary-icon {
-  width: 54px;
-  height: 54px;
+  width: 55px;
+  height: 55px;
 
   display: flex;
+
   align-items: center;
   justify-content: center;
 
-  border-radius: 13px;
+  border-radius: 14px;
 
   background: #eaf1ff;
+
+  border: 1px solid #dbe7ff;
 
   font-size: 24px;
 }
@@ -859,6 +999,7 @@
   color: #667085;
 
   font-size: 13px;
+
   font-weight: 600;
 
   margin-bottom: 5px;
@@ -869,7 +1010,8 @@
 
   color: #101828;
 
-  font-size: 25px;
+  font-size: 27px;
+
   font-weight: 800;
 }
 
@@ -883,11 +1025,12 @@
 
   color: #ffffff;
 
-  padding: 28px 48px;
+  padding: 30px 48px;
 
   display: flex;
 
   align-items: center;
+
   justify-content: space-between;
 
   gap: 20px;
@@ -896,8 +1039,11 @@
 }
 
 .admin-footer-brand {
-  font-size: 18px;
+  font-size: 19px;
+
   font-weight: 800;
+
+  letter-spacing: -0.3px;
 }
 
 .admin-footer-text {
@@ -988,6 +1134,12 @@
     padding-bottom: 3px;
 
     justify-content: flex-start;
+
+    scrollbar-width: none;
+  }
+
+  .admin-navbar-actions::-webkit-scrollbar {
+    display: none;
   }
 
   .admin-nav-btn,
@@ -1020,9 +1172,9 @@
 
     align-items: flex-start;
 
-    padding: 24px 20px;
+    padding: 25px 20px;
 
-    border-radius: 14px;
+    border-radius: 15px;
   }
 
   .admin-welcome h1 {
@@ -1088,7 +1240,7 @@
   }
 
 
-  /* RECENT */
+  /* RECENT COMPLAINTS */
 
   .admin-recent-complaint {
     flex-direction: column;
@@ -1096,6 +1248,10 @@
     gap: 12px;
 
     padding: 16px;
+  }
+
+  .admin-recent-complaint:hover {
+    padding-left: 16px;
   }
 
   .recent-complaint-main h3 {

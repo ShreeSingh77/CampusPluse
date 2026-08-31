@@ -1,948 +1,1027 @@
-/* =========================================================
-   CAMPUSPULSE - ADMIN COMPLAINT DETAILS
-   ========================================================= */
+/* ==========================================
+   ADMIN COMPLAINT DETAILS PAGE
+========================================== */
 
 .admin-details-page {
-  width: 100%;
   min-height: 100vh;
-  padding: 40px;
-  background: #f5f7fb;
+
+  background: #f6f8fc;
+
+  color: #172033;
+
+  padding: 40px 6% 55px;
+
   box-sizing: border-box;
-  overflow-x: clip;
 }
 
-/* =========================================================
+
+/* ==========================================
    HEADER
-   ========================================================= */
+========================================== */
 
 .admin-details-header {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto 28px;
+  margin-bottom: 30px;
 }
 
 .admin-back-link {
-  display: inline-flex;
-  align-items: center;
-  margin-bottom: 20px;
-  padding: 8px 0;
   border: none;
+
   background: transparent;
-  color: #64748b;
-  font-family: inherit;
+
+  padding: 0;
+
+  margin-bottom: 22px;
+
+  color: #5b63d3;
+
   font-size: 13px;
   font-weight: 700;
+
   cursor: pointer;
+
   transition: 0.2s ease;
 }
 
 .admin-back-link:hover {
-  color: #2563eb;
-  transform: translateX(-2px);
+  transform: translateX(-3px);
 }
 
-.admin-page-label {
-  margin: 0 0 6px;
-  color: #2563eb;
-  font-size: 13px;
-  font-weight: 700;
+.admin-details-header .admin-page-label {
+  margin: 0 0 7px;
+
+  color: #5b63d3;
+
+  font-size: 12px;
+  font-weight: 800;
+
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+
+  letter-spacing: 1px;
 }
 
 .admin-details-header h1 {
-  margin: 0;
-  color: #111827;
-  font-size: 32px;
+  margin: 0 0 8px;
+
+  color: #172033;
+
+  font-size: 34px;
   font-weight: 800;
-  line-height: 1.2;
-  overflow-wrap: anywhere;
+
+  letter-spacing: -0.7px;
 }
 
 .admin-header-description {
-  margin: 8px 0 0;
-  color: #6b7280;
+  margin: 0;
+
+  color: #687386;
+
   font-size: 14px;
-  line-height: 1.5;
+
+  line-height: 1.6;
 }
 
-/* =========================================================
+
+/* ==========================================
    MAIN LAYOUT
-   ========================================================= */
+========================================== */
 
 .admin-details-layout {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 320px;
 
-  gap: 22px;
+  grid-template-columns:
+    minmax(0, 1fr)
+    340px;
+
+  gap: 24px;
+
   align-items: start;
 }
 
-/* =========================================================
-   MAIN CARD
-   ========================================================= */
+
+/* ==========================================
+   MAIN COMPLAINT CARD
+========================================== */
 
 .admin-details-main-card {
-  min-width: 0;
-
-  padding: 28px;
-
   background: #ffffff;
 
-  border: 1px solid #e5e7eb;
-  border-radius: 16px;
+  border: 1px solid #e5e8ef;
 
-  box-shadow: 0 4px 15px rgba(15, 23, 42, 0.04);
+  border-radius: 18px;
+
+  padding: 30px;
+
+  box-shadow:
+    0 8px 30px rgba(30, 40, 70, 0.05);
 
   box-sizing: border-box;
 }
 
-/* =========================================================
-   TITLE
-   ========================================================= */
+
+/* ==========================================
+   TITLE ROW
+========================================== */
 
 .admin-title-row {
   display: flex;
-  align-items: flex-start;
+
   justify-content: space-between;
 
-  gap: 18px;
+  align-items: flex-start;
 
-  padding-bottom: 22px;
+  gap: 20px;
 
-  border-bottom: 1px solid #eef2f7;
+  padding-bottom: 25px;
+
+  border-bottom: 1px solid #edf0f5;
 }
 
-.admin-category {
-  margin: 0 0 6px;
+.admin-title-row > div {
+  min-width: 0;
+}
 
-  color: #2563eb;
+.admin-title-row .admin-category {
+  display: inline-flex;
+
+  align-items: center;
+
+  margin-bottom: 9px;
+
+  padding: 5px 10px;
+
+  border-radius: 7px;
+
+  background: #eef0ff;
+
+  color: #5961ce;
 
   font-size: 11px;
   font-weight: 800;
 
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
+  text-transform: capitalize;
 }
 
 .admin-title-row h2 {
   margin: 0;
 
-  color: #111827;
+  color: #172033;
 
-  font-size: 23px;
+  font-size: 24px;
   font-weight: 800;
-  line-height: 1.35;
 
-  overflow-wrap: anywhere;
+  line-height: 1.4;
+
+  word-break: break-word;
 }
 
-/* =========================================================
+
+/* ==========================================
    STATUS BADGE
-   ========================================================= */
+========================================== */
 
 .admin-status-badge {
-  flex-shrink: 0;
-
   display: inline-flex;
+
   align-items: center;
+
   justify-content: center;
 
-  padding: 7px 11px;
+  padding: 8px 12px;
 
-  border-radius: 8px;
+  border-radius: 9px;
 
-  font-size: 12px;
-  font-weight: 700;
+  background: #f3f4f6;
+
+  color: #596274;
+
+  font-size: 11px;
+  font-weight: 800;
 
   text-transform: capitalize;
 
   white-space: nowrap;
+
+  flex-shrink: 0;
 }
 
 .admin-status-badge.submitted {
-  background: #fef3c7;
-  color: #92400e;
+  background: #fff7e6;
+  color: #a66a00;
 }
 
 .admin-status-badge.under_review {
-  background: #e0f2fe;
-  color: #0369a1;
-}
-
-.admin-status-badge.assigned {
-  background: #ede9fe;
-  color: #6d28d9;
+  background: #eef4ff;
+  color: #4267a9;
 }
 
 .admin-status-badge.in_progress {
-  background: #dbeafe;
-  color: #1d4ed8;
+  background: #eef0ff;
+  color: #555fc9;
 }
 
 .admin-status-badge.resolved {
-  background: #dcfce7;
-  color: #166534;
+  background: #ecf9f1;
+  color: #27824d;
 }
 
 .admin-status-badge.rejected {
-  background: #fee2e2;
-  color: #991b1b;
+  background: #fff0f0;
+  color: #c44949;
 }
 
-/* =========================================================
-   SECTIONS
-   ========================================================= */
+
+/* ==========================================
+   DETAILS SECTION
+========================================== */
 
 .admin-details-section {
-  padding: 22px 0;
+  margin-top: 28px;
 
-  border-bottom: 1px solid #eef2f7;
+  padding-top: 28px;
+
+  border-top: 1px solid #edf0f5;
 }
 
-.admin-details-section:last-child {
-  border-bottom: none;
-  padding-bottom: 0;
+.admin-details-section:first-of-type {
+  border-top: none;
+
+  padding-top: 0;
 }
 
 .admin-details-section h3 {
-  margin: 0 0 12px;
+  margin: 0 0 15px;
 
-  color: #1f2937;
+  color: #222b3d;
 
-  font-size: 15px;
-  font-weight: 750;
+  font-size: 16px;
+  font-weight: 800;
 }
 
-/* =========================================================
+
+/* ==========================================
    DESCRIPTION
-   ========================================================= */
+========================================== */
 
 .admin-description {
   margin: 0;
 
-  color: #64748b;
+  padding: 17px 18px;
+
+  border: 1px solid #e7eaf0;
+
+  border-radius: 11px;
+
+  background: #fafbfc;
+
+  color: #596476;
 
   font-size: 14px;
-  line-height: 1.7;
 
-  overflow-wrap: anywhere;
+  line-height: 1.75;
+
+  white-space: pre-wrap;
+
   word-break: break-word;
 }
 
-/* =========================================================
+
+/* ==========================================
    INFORMATION GRID
-   ========================================================= */
+========================================== */
 
 .admin-info-grid {
   display: grid;
 
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
 
-  gap: 12px;
+  gap: 13px;
 }
 
 .admin-info-box {
-  min-width: 0;
+  padding: 16px;
 
-  padding: 14px;
+  border: 1px solid #e5e8ef;
 
-  background: #f8fafc;
+  border-radius: 11px;
 
-  border: 1px solid #eef2f7;
-
-  border-radius: 10px;
+  background: #fafbfc;
 
   box-sizing: border-box;
 }
 
-.admin-info-box span {
+.admin-info-box > span {
   display: block;
 
-  margin-bottom: 6px;
+  margin-bottom: 7px;
 
-  color: #64748b;
+  color: #7a8495;
 
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .admin-info-box strong {
   display: block;
 
-  color: #1f2937;
+  color: #222b3d;
 
-  font-size: 13px;
-  font-weight: 700;
+  font-size: 14px;
 
-  overflow-wrap: anywhere;
+  line-height: 1.5;
+
+  word-break: break-word;
 }
 
-/* =========================================================
-   PRIORITY
-   ========================================================= */
 
-.admin-priority {
+/* ==========================================
+   PRIORITY
+========================================== */
+
+.admin-info-box strong.admin-priority {
+  display: inline-flex;
+
+  width: fit-content;
+
+  padding: 5px 9px;
+
+  border-radius: 7px;
+
+  font-size: 11px;
+
   text-transform: capitalize;
 }
 
 .admin-priority.low {
-  color: #475569;
+  background: #edf8f1;
+  color: #358052;
 }
 
 .admin-priority.medium {
-  color: #b45309;
+  background: #fff7e6;
+  color: #a66a00;
 }
 
 .admin-priority.high {
-  color: #c2410c;
+  background: #fff0e9;
+  color: #c45d32;
 }
 
-.admin-priority.urgent {
-  color: #b91c1c;
+.admin-priority.critical {
+  background: #ffecec;
+  color: #c63f3f;
 }
 
-/* =========================================================
+
+/* ==========================================
    PERSON BOX
-   ========================================================= */
+========================================== */
 
 .admin-person-box {
   display: flex;
+
   align-items: center;
 
-  gap: 12px;
+  gap: 14px;
 
-  padding: 14px;
+  padding: 16px;
 
-  background: #f8fafc;
+  border: 1px solid #e5e8ef;
 
-  border: 1px solid #eef2f7;
+  border-radius: 11px;
 
-  border-radius: 10px;
-
-  min-width: 0;
+  background: #fafbfc;
 }
 
 .admin-person-avatar {
+  width: 46px;
+  height: 46px;
+
   flex-shrink: 0;
 
-  width: 40px;
-  height: 40px;
-
   display: flex;
+
   align-items: center;
   justify-content: center;
 
   border-radius: 50%;
 
-  background: #dbeafe;
+  background: #eef0ff;
 
-  color: #1d4ed8;
+  color: #5961ce;
 
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 800;
 }
 
 .admin-person-box > div:last-child {
   min-width: 0;
-
-  display: flex;
-  flex-direction: column;
-
-  gap: 3px;
 }
 
 .admin-person-box strong {
-  color: #1f2937;
+  display: block;
 
-  font-size: 13px;
-  font-weight: 750;
+  margin-bottom: 4px;
 
-  overflow-wrap: anywhere;
+  color: #222b3d;
+
+  font-size: 14px;
+  font-weight: 800;
 }
 
 .admin-person-box span {
-  color: #64748b;
+  display: block;
+
+  margin-top: 3px;
+
+  color: #7a8495;
 
   font-size: 12px;
 
-  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
-/* =========================================================
+
+/* ==========================================
    UNASSIGNED
-   ========================================================= */
+========================================== */
 
 .admin-unassigned {
   display: flex;
+
   align-items: flex-start;
 
-  gap: 12px;
+  gap: 13px;
 
-  padding: 15px;
+  padding: 16px;
 
-  background: #fff7ed;
+  border: 1px solid #f1dfbd;
 
-  border: 1px solid #fed7aa;
+  border-radius: 11px;
 
-  border-radius: 10px;
+  background: #fffaf0;
 }
 
 .admin-unassigned > span {
-  font-size: 18px;
+  width: 35px;
+  height: 35px;
+
   flex-shrink: 0;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 9px;
+
+  background: #fff1cf;
+
+  font-size: 17px;
 }
 
 .admin-unassigned strong {
   display: block;
 
-  color: #c2410c;
+  margin-bottom: 4px;
 
-  font-size: 13px;
+  color: #8a5a00;
+
+  font-size: 14px;
 }
 
 .admin-unassigned p {
-  margin: 4px 0 0;
+  margin: 0;
 
-  color: #7c2d12;
+  color: #9a7a42;
 
   font-size: 12px;
+
   line-height: 1.5;
 }
 
-/* =========================================================
+
+/* ==========================================
    PRIORITY REASON
-   ========================================================= */
+========================================== */
 
 .admin-priority-reason {
-  padding: 13px 15px;
+  padding: 15px 16px;
 
-  background: #eff6ff;
-
-  border: 1px solid #dbeafe;
-
-  border-radius: 9px;
-
-  color: #1e40af;
-
-  font-size: 13px;
-  line-height: 1.5;
-
-  overflow-wrap: anywhere;
-}
-
-/* =========================================================
-   ESCALATION
-   ========================================================= */
-
-.admin-escalation-box {
-  padding: 15px;
-
-  background: #fff7ed;
-
-  border: 1px solid #fed7aa;
+  border: 1px solid #e6e8f5;
 
   border-radius: 10px;
+
+  background: #f7f8ff;
+
+  color: #555fc9;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  line-height: 1.6;
+}
+
+
+/* ==========================================
+   ESCALATION
+========================================== */
+
+.admin-escalation-box {
+  padding: 17px;
+
+  border: 1px solid #f1cccc;
+
+  border-radius: 11px;
+
+  background: #fff5f5;
 }
 
 .admin-escalation-box strong {
   display: block;
 
-  color: #c2410c;
+  margin-bottom: 8px;
+
+  color: #c44747;
 
   font-size: 14px;
 }
 
 .admin-escalation-box p {
-  margin: 7px 0 0;
+  margin: 4px 0;
 
-  color: #7c2d12;
+  color: #8f5a5a;
 
   font-size: 12px;
 }
 
-/* =========================================================
+
+/* ==========================================
    ASSIGNMENT CARD
-   ========================================================= */
+========================================== */
 
 .admin-assignment-card {
   position: sticky;
-  top: 20px;
 
-  min-width: 0;
-
-  padding: 22px;
+  top: 25px;
 
   background: #ffffff;
 
-  border: 1px solid #e5e7eb;
+  border: 1px solid #e5e8ef;
 
-  border-radius: 14px;
+  border-radius: 18px;
 
-  box-shadow: 0 4px 15px rgba(15, 23, 42, 0.04);
+  padding: 24px;
+
+  box-shadow:
+    0 8px 30px rgba(30, 40, 70, 0.05);
 
   box-sizing: border-box;
 }
 
-/* =========================================================
+
+/* ==========================================
    ASSIGNMENT HEADING
-   ========================================================= */
+========================================== */
 
 .assignment-heading {
   display: flex;
+
   align-items: flex-start;
 
-  gap: 11px;
+  gap: 13px;
+
+  padding-bottom: 20px;
 
   margin-bottom: 20px;
+
+  border-bottom: 1px solid #edf0f5;
 }
 
 .assignment-icon {
+  width: 42px;
+  height: 42px;
+
   flex-shrink: 0;
 
-  width: 36px;
-  height: 36px;
-
   display: flex;
+
   align-items: center;
   justify-content: center;
 
-  background: #eff6ff;
+  border-radius: 11px;
 
-  border-radius: 9px;
+  background: #eef0ff;
 
-  font-size: 17px;
+  font-size: 19px;
 }
 
 .assignment-heading h3 {
-  margin: 0;
+  margin: 0 0 5px;
 
-  color: #111827;
+  color: #222b3d;
 
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 800;
 }
 
 .assignment-heading p {
-  margin: 5px 0 0;
+  margin: 0;
 
-  color: #64748b;
+  color: #818a9a;
 
-  font-size: 12px;
+  font-size: 11px;
+
   line-height: 1.5;
 }
 
-/* =========================================================
+
+/* ==========================================
    CURRENT ASSIGNMENT
-   ========================================================= */
+========================================== */
 
 .current-assignment {
-  margin-bottom: 18px;
+  padding: 13px 14px;
 
-  padding: 12px 13px;
+  margin-bottom: 20px;
 
-  background: #f0fdf4;
+  border-radius: 10px;
 
-  border: 1px solid #dcfce7;
+  background: #f4f6ff;
 
-  border-radius: 9px;
+  border: 1px solid #e1e4fb;
 }
 
 .current-assignment span {
   display: block;
 
-  margin-bottom: 4px;
+  margin-bottom: 5px;
 
-  color: #64748b;
+  color: #7a83a2;
 
-  font-size: 11px;
-}
+  font-size: 10px;
 
-.current-assignment strong {
-  color: #166534;
-
-  font-size: 13px;
-
-  overflow-wrap: anywhere;
-}
-
-/* =========================================================
-   LABEL
-   ========================================================= */
-
-.admin-assignment-card label {
-  display: block;
-
-  margin-bottom: 7px;
-
-  color: #374151;
-
-  font-size: 12px;
   font-weight: 700;
 }
 
-/* =========================================================
+.current-assignment strong {
+  color: #555fc9;
+
+  font-size: 13px;
+}
+
+
+/* ==========================================
+   LABEL
+========================================== */
+
+.admin-assignment-card > label {
+  display: block;
+
+  margin-bottom: 8px;
+
+  color: #30394c;
+
+  font-size: 12px;
+  font-weight: 800;
+}
+
+
+/* ==========================================
    SELECT
-   ========================================================= */
+========================================== */
 
 .admin-assignment-card select {
   width: 100%;
-  height: 44px;
 
-  padding: 0 11px;
+  height: 45px;
 
-  border: 1px solid #d1d5db;
+  padding: 0 12px;
 
-  border-radius: 8px;
+  border: 1px solid #dfe3eb;
+
+  border-radius: 9px;
 
   background: #ffffff;
 
-  color: #111827;
-
-  font-family: inherit;
+  color: #293246;
 
   font-size: 13px;
 
   outline: none;
 
-  box-sizing: border-box;
-
   cursor: pointer;
 
-  transition: 0.2s ease;
+  box-sizing: border-box;
+
+  transition: all 0.2s ease;
 }
 
 .admin-assignment-card select:focus {
-  border-color: #2563eb;
+  border-color: #6971dc;
 
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  box-shadow:
+    0 0 0 3px rgba(105, 113, 220, 0.1);
 }
 
 .admin-assignment-card select:disabled {
+  background: #f5f6f8;
+
   cursor: not-allowed;
 
-  background: #f8fafc;
+  opacity: 0.7;
 }
 
-/* =========================================================
+
+/* ==========================================
    ASSIGN BUTTON
-   ========================================================= */
+========================================== */
 
 .admin-assign-btn {
   width: 100%;
-  min-height: 44px;
 
-  margin-top: 12px;
+  height: 44px;
 
-  padding: 10px 14px;
+  margin-top: 14px;
 
-  border: 1px solid #2563eb;
+  border: none;
 
-  border-radius: 8px;
+  border-radius: 9px;
 
-  background: #2563eb;
+  background: #5b63d3;
 
   color: #ffffff;
 
-  font-family: inherit;
-
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 800;
 
   cursor: pointer;
 
-  transition: 0.2s ease;
+  box-shadow:
+    0 7px 18px rgba(91, 99, 211, 0.2);
+
+  transition: all 0.2s ease;
 }
 
 .admin-assign-btn:hover:not(:disabled) {
-  background: #1d4ed8;
+  background: #4b53c4;
 
   transform: translateY(-1px);
 }
 
 .admin-assign-btn:disabled {
+  opacity: 0.5;
+
   cursor: not-allowed;
 
-  opacity: 0.55;
+  box-shadow: none;
 }
 
-/* =========================================================
+
+/* ==========================================
    DIVIDER
-   ========================================================= */
+========================================== */
 
 .assignment-divider {
+  position: relative;
+
   display: flex;
+
   align-items: center;
 
-  gap: 10px;
+  justify-content: center;
 
-  margin: 18px 0;
+  margin: 20px 0;
 }
 
-.assignment-divider::before,
-.assignment-divider::after {
+.assignment-divider::before {
   content: "";
 
-  flex: 1;
+  position: absolute;
+
+  left: 0;
+  right: 0;
 
   height: 1px;
 
-  background: #e5e7eb;
+  background: #edf0f5;
 }
 
 .assignment-divider span {
-  color: #94a3b8;
+  position: relative;
+
+  padding: 0 10px;
+
+  background: #ffffff;
+
+  color: #9aa2af;
 
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 800;
 }
 
-/* =========================================================
+
+/* ==========================================
    AUTO ASSIGN
-   ========================================================= */
+========================================== */
 
 .admin-auto-assign-btn {
   width: 100%;
-  min-height: 44px;
 
-  padding: 10px 14px;
+  height: 43px;
 
-  border: 1px solid #dbeafe;
+  border: 1px solid #d9dcef;
 
-  border-radius: 8px;
+  border-radius: 9px;
 
-  background: #eff6ff;
+  background: #f7f8ff;
 
-  color: #1d4ed8;
-
-  font-family: inherit;
+  color: #555fc9;
 
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 800;
 
   cursor: pointer;
 
-  transition: 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .admin-auto-assign-btn:hover:not(:disabled) {
-  background: #dbeafe;
+  background: #eef0ff;
 
-  border-color: #bfdbfe;
+  border-color: #c9cdf2;
 
   transform: translateY(-1px);
 }
 
 .admin-auto-assign-btn:disabled {
-  cursor: not-allowed;
+  opacity: 0.5;
 
-  opacity: 0.55;
+  cursor: not-allowed;
 }
 
-/* =========================================================
+
+/* ==========================================
    ASSIGNMENT NOTE
-   ========================================================= */
+========================================== */
 
 .assignment-note {
-  margin: 10px 0 0;
+  margin: 12px 2px 0;
 
-  color: #94a3b8;
+  color: #929aa8;
 
-  font-size: 11px;
-  line-height: 1.5;
+  font-size: 10px;
+
+  line-height: 1.6;
 
   text-align: center;
 }
 
-/* =========================================================
+
+/* ==========================================
    EMPTY / LOADING
-   ========================================================= */
+========================================== */
 
 .admin-details-empty {
-  width: 100%;
-  max-width: 700px;
+  min-height: 70vh;
 
-  margin: 80px auto;
+  display: flex;
 
-  padding: 60px 25px;
+  flex-direction: column;
 
-  background: #ffffff;
-
-  border: 1px solid #e5e7eb;
-
-  border-radius: 15px;
+  align-items: center;
+  justify-content: center;
 
   text-align: center;
 
-  box-sizing: border-box;
+  padding: 30px;
 }
 
 .admin-empty-icon {
-  font-size: 42px;
+  width: 62px;
+  height: 62px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 16px;
+
+  border-radius: 16px;
+
+  background: #eef0ff;
+
+  font-size: 28px;
 }
 
 .admin-details-empty h3 {
-  margin: 12px 0 6px;
+  margin: 0 0 7px;
 
-  color: #111827;
+  color: #293246;
 
   font-size: 18px;
+  font-weight: 800;
 }
 
 .admin-details-empty p {
-  margin: 0;
+  max-width: 420px;
 
-  color: #64748b;
+  margin: 0 0 20px;
+
+  color: #8a93a2;
 
   font-size: 13px;
-  line-height: 1.5;
+
+  line-height: 1.6;
 }
 
-.admin-back-btn {
-  margin-top: 18px;
+.admin-details-empty .admin-back-btn {
+  border: 1px solid #dfe3eb;
 
-  padding: 10px 15px;
+  background: #ffffff;
 
-  border: none;
+  color: #555fc9;
 
-  border-radius: 8px;
+  padding: 10px 16px;
 
-  background: #2563eb;
+  border-radius: 9px;
 
-  color: #ffffff;
-
-  font-family: inherit;
-
-  font-size: 13px;
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 800;
 
   cursor: pointer;
-
-  transition: 0.2s ease;
 }
 
-.admin-back-btn:hover {
-  background: #1d4ed8;
 
-  transform: translateY(-1px);
-}
-
-/* =========================================================
+/* ==========================================
    TABLET
-   ========================================================= */
+========================================== */
 
-@media (max-width: 900px) {
+@media (max-width: 950px) {
+
   .admin-details-page {
-    padding: 30px 20px;
+    padding: 32px 4% 45px;
   }
 
   .admin-details-layout {
-    grid-template-columns: minmax(0, 1fr);
+    grid-template-columns: 1fr;
   }
 
   .admin-assignment-card {
     position: static;
   }
+
 }
 
-/* =========================================================
+
+/* ==========================================
    MOBILE
-   ========================================================= */
+========================================== */
 
-@media (max-width: 600px) {
+@media (max-width: 650px) {
+
   .admin-details-page {
-    padding: 20px 12px;
-  }
-
-  .admin-details-header {
-    margin-bottom: 20px;
-  }
-
-  .admin-back-link {
-    margin-bottom: 16px;
+    padding: 22px 16px 40px;
   }
 
   .admin-details-header h1 {
-    font-size: 25px;
-  }
-
-  .admin-header-description {
-    font-size: 13px;
-  }
-
-  .admin-details-layout {
-    gap: 14px;
+    font-size: 28px;
   }
 
   .admin-details-main-card {
-    padding: 19px 16px;
+    padding: 20px 18px;
 
-    border-radius: 13px;
+    border-radius: 14px;
   }
 
   .admin-title-row {
     flex-direction: column;
 
-    align-items: flex-start;
-
-    gap: 11px;
+    gap: 12px;
   }
 
   .admin-title-row h2 {
-    font-size: 19px;
+    font-size: 20px;
   }
 
   .admin-status-badge {
-    font-size: 11px;
-  }
-
-  .admin-details-section {
-    padding: 18px 0;
-  }
-
-  .admin-description {
-    font-size: 13px;
+    align-self: flex-start;
   }
 
   .admin-info-grid {
     grid-template-columns: 1fr;
   }
 
-  .admin-assignment-card {
-    padding: 19px 16px;
-
-    border-radius: 13px;
-  }
-}
-
-/* =========================================================
-   SMALL MOBILE
-   ========================================================= */
-
-@media (max-width: 380px) {
-  .admin-details-page {
-    padding: 18px 10px;
-  }
-
-  .admin-details-main-card,
-  .admin-assignment-card {
-    padding: 16px 13px;
-  }
-
-  .admin-title-row h2 {
-    font-size: 18px;
-  }
-
   .admin-person-box {
-    padding: 12px;
+    align-items: flex-start;
   }
 
-  .admin-person-avatar {
-    width: 36px;
-    height: 36px;
+  .admin-assignment-card {
+    padding: 20px 18px;
+
+    border-radius: 14px;
   }
+
 }

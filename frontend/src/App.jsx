@@ -18,6 +18,7 @@ import Profile from "./pages/student/Profile";
 import StaffDashboard from "./pages/staff/Dashboard";
 import StaffComplaints from "./pages/staff/Complaints";
 import StaffComplaintDetails from "./pages/staff/ComplaintDetails";
+import AdminNotifications from "./pages/admin/AdminNotifications";
 import StaffNotifications from "./pages/staff/Notifications";
 import StaffProfile from "./pages/staff/Profile";
 
@@ -353,10 +354,10 @@ function App() {
 />
 
 <Route
-  path="/staff/notifications"
+  path="/student/notifications"
   element={
-    <ProtectedRoute allowedRoles={["staff"]}>
-      <StaffNotifications />
+    <ProtectedRoute role="student">
+      <Notifications />
     </ProtectedRoute>
   }
 />
@@ -395,9 +396,14 @@ function App() {
   }
 />
 <Route
+  path="/admin/notifications"
+  element={<AdminNotifications />}
+/>
+<Route
   path="/admin/profile"
   element={<AdminProfile />}
 />
+
 <Route
   path="/admin/staff"
   element={<StaffManagement />}

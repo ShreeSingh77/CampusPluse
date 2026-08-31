@@ -1,0 +1,1124 @@
+/* =========================================================
+   ADMIN NOTIFICATIONS
+   CampusPulse
+========================================================= */
+
+* {
+  box-sizing: border-box;
+}
+
+.admin-notifications-page {
+  min-height: 100vh;
+  background: #f5f7fb;
+  color: #172033;
+
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+}
+
+
+/* =========================================================
+   NAVBAR
+========================================================= */
+
+.admin-navbar {
+  height: 72px;
+  width: 100%;
+
+  background: #ffffff;
+  border-bottom: 1px solid #e7eaf0;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 48px;
+
+  position: sticky;
+  top: 0;
+  z-index: 100;
+
+  box-shadow:
+    0 2px 12px rgba(20, 30, 50, 0.04);
+}
+
+
+/* BRAND */
+
+.admin-navbar-brand {
+  font-size: 24px;
+  font-weight: 800;
+
+  letter-spacing: -0.6px;
+
+  color: #1d4ed8;
+}
+
+
+/* NAV ACTIONS */
+
+.admin-navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+
+/* NAV BUTTON */
+
+.admin-nav-btn {
+  border: none;
+  background: transparent;
+
+  color: #667085;
+
+  padding: 10px 15px;
+
+  border-radius: 9px;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.admin-nav-btn:hover {
+  background: #f1f5ff;
+  color: #1d4ed8;
+}
+
+.admin-nav-btn.active {
+  background: #eaf1ff;
+  color: #1d4ed8;
+}
+
+
+/* LOGOUT */
+
+.admin-logout-btn {
+  border: 1px solid #fecaca;
+
+  background: #fff7f7;
+  color: #dc2626;
+
+  padding: 9px 16px;
+
+  border-radius: 9px;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  margin-left: 5px;
+
+  transition: all 0.2s ease;
+}
+
+.admin-logout-btn:hover {
+  background: #fee2e2;
+  border-color: #fca5a5;
+
+  transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.admin-notifications-main {
+  width: min(1280px, calc(100% - 64px));
+
+  margin: 0 auto;
+
+  padding: 42px 0 70px;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.admin-notifications-header {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 30px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #ffffff 0%,
+      #f8faff 100%
+    );
+
+  border: 1px solid #e5e9f2;
+
+  border-radius: 18px;
+
+  padding: 32px 36px;
+
+  margin-bottom: 28px;
+
+  box-shadow:
+    0 8px 30px rgba(20, 35, 70, 0.05);
+}
+
+
+/* PAGE LABEL */
+
+.admin-page-label {
+  margin: 0 0 7px;
+
+  color: #2563eb;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  text-transform: uppercase;
+
+  letter-spacing: 1px;
+}
+
+
+/* HEADER TITLE */
+
+.admin-notifications-header h1 {
+  margin: 0;
+
+  color: #101828;
+
+  font-size: 31px;
+
+  line-height: 1.25;
+
+  letter-spacing: -0.7px;
+}
+
+
+/* HEADER DESCRIPTION */
+
+.admin-notifications-header p:not(.admin-page-label) {
+  margin: 10px 0 0;
+
+  max-width: 700px;
+
+  color: #667085;
+
+  font-size: 15px;
+
+  line-height: 1.6;
+}
+
+
+/* HEADER BADGE */
+
+.admin-notifications-header-badge {
+  display: flex;
+
+  align-items: center;
+
+  gap: 9px;
+
+  padding: 11px 17px;
+
+  background: #ecfdf3;
+
+  border: 1px solid #bbf7d0;
+
+  border-radius: 30px;
+
+  color: #15803d;
+
+  font-size: 13px;
+
+  font-weight: 700;
+
+  white-space: nowrap;
+}
+
+.admin-notifications-header-badge span {
+  color: #22c55e;
+
+  font-size: 12px;
+}
+
+
+/* =========================================================
+   NOTIFICATION STATISTICS
+========================================================= */
+
+.admin-notification-stats {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+
+  gap: 18px;
+
+  margin-bottom: 30px;
+}
+
+
+/* STAT CARD */
+
+.admin-notification-stat-card {
+  min-height: 125px;
+
+  background: #ffffff;
+
+  border: 1px solid #e7eaf0;
+
+  border-radius: 15px;
+
+  padding: 22px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 17px;
+
+  box-shadow:
+    0 5px 18px rgba(20, 30, 50, 0.04);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.admin-notification-stat-card:hover {
+  transform: translateY(-3px);
+
+  border-color: #cbd5e1;
+
+  box-shadow:
+    0 12px 28px rgba(20, 30, 50, 0.08);
+}
+
+
+/* STAT ICON */
+
+.admin-notification-stat-icon {
+  width: 52px;
+  height: 52px;
+
+  flex-shrink: 0;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  background: #eef4ff;
+
+  border-radius: 13px;
+
+  font-size: 24px;
+}
+
+
+/* STAT TEXT */
+
+.admin-notification-stat-card span {
+  display: block;
+
+  color: #667085;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  margin-bottom: 7px;
+}
+
+.admin-notification-stat-card strong {
+  display: block;
+
+  color: #101828;
+
+  font-size: 28px;
+
+  line-height: 1;
+
+  font-weight: 800;
+}
+
+
+/* =========================================================
+   MAIN NOTIFICATIONS CARD
+========================================================= */
+
+.admin-notifications-card {
+  background: #ffffff;
+
+  border: 1px solid #e5e9f0;
+
+  border-radius: 17px;
+
+  padding: 28px;
+
+  margin-bottom: 28px;
+
+  box-shadow:
+    0 5px 20px rgba(20, 30, 50, 0.035);
+}
+
+
+/* =========================================================
+   CARD HEADER
+========================================================= */
+
+.admin-notifications-card-header {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  margin-bottom: 22px;
+}
+
+.admin-notifications-card-header h2 {
+  margin: 0;
+
+  color: #101828;
+
+  font-size: 20px;
+
+  font-weight: 750;
+
+  letter-spacing: -0.3px;
+}
+
+.admin-notifications-card-header p {
+  margin: 6px 0 0;
+
+  color: #667085;
+
+  font-size: 14px;
+}
+
+
+/* =========================================================
+   MARK ALL BUTTON
+========================================================= */
+
+.admin-mark-all-btn {
+  border: 1px solid #bfdbfe;
+
+  background: #eff6ff;
+
+  color: #1d4ed8;
+
+  padding: 10px 16px;
+
+  border-radius: 9px;
+
+  font-size: 13px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  white-space: nowrap;
+
+  transition: all 0.2s ease;
+}
+
+.admin-mark-all-btn:hover {
+  background: #dbeafe;
+
+  border-color: #93c5fd;
+
+  transform: translateY(-1px);
+}
+
+.admin-mark-all-btn:disabled {
+  opacity: 0.65;
+
+  cursor: not-allowed;
+
+  transform: none;
+}
+
+
+/* =========================================================
+   EMPTY / LOADING STATE
+========================================================= */
+
+.admin-notification-empty {
+  min-height: 280px;
+
+  border: 1px dashed #d7dce5;
+
+  background: #fafbfc;
+
+  border-radius: 13px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  text-align: center;
+
+  padding: 30px;
+}
+
+.admin-notification-empty-icon {
+  width: 60px;
+  height: 60px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 15px;
+
+  background: #eef2f7;
+
+  font-size: 26px;
+
+  margin-bottom: 14px;
+}
+
+.admin-notification-empty h3 {
+  margin: 0;
+
+  color: #344054;
+
+  font-size: 17px;
+}
+
+.admin-notification-empty p {
+  max-width: 450px;
+
+  margin: 7px 0 0;
+
+  color: #98a2b3;
+
+  font-size: 13px;
+
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   NOTIFICATION LIST
+========================================================= */
+
+.admin-notification-list {
+  display: flex;
+
+  flex-direction: column;
+
+  border: 1px solid #eaecf0;
+
+  border-radius: 13px;
+
+  overflow: hidden;
+}
+
+
+/* =========================================================
+   NOTIFICATION ITEM
+========================================================= */
+
+.admin-notification-item {
+  position: relative;
+
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 16px;
+
+  padding: 19px 20px;
+
+  background: #ffffff;
+
+  border-bottom: 1px solid #eaecf0;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.admin-notification-item:last-child {
+  border-bottom: none;
+}
+
+.admin-notification-item:hover {
+  background: #f8faff;
+}
+
+
+/* =========================================================
+   UNREAD NOTIFICATION
+========================================================= */
+
+.admin-notification-item.unread {
+  background: #f8fbff;
+
+  box-shadow:
+    inset 3px 0 0 #2563eb;
+}
+
+.admin-notification-item.unread:hover {
+  background: #f3f7ff;
+}
+
+
+/* =========================================================
+   NOTIFICATION ICON
+========================================================= */
+
+.admin-notification-icon {
+  width: 48px;
+  height: 48px;
+
+  flex-shrink: 0;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  background: #eef4ff;
+
+  border: 1px solid #dbe7ff;
+
+  border-radius: 12px;
+
+  font-size: 21px;
+}
+
+
+/* =========================================================
+   CONTENT
+========================================================= */
+
+.admin-notification-content {
+  flex: 1;
+
+  min-width: 0;
+}
+
+
+/* TITLE ROW */
+
+.admin-notification-title-row {
+  display: flex;
+
+  align-items: flex-start;
+
+  justify-content: space-between;
+
+  gap: 12px;
+}
+
+
+/* TYPE */
+
+.admin-notification-type {
+  display: inline-flex;
+
+  align-items: center;
+
+  padding: 4px 8px;
+
+  margin-bottom: 6px;
+
+  border-radius: 6px;
+
+  background: #eff6ff;
+
+  color: #2563eb;
+
+  font-size: 10px;
+
+  font-weight: 800;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.5px;
+}
+
+
+/* TITLE */
+
+.admin-notification-content h3 {
+  margin: 0;
+
+  color: #1d2939;
+
+  font-size: 15px;
+
+  font-weight: 700;
+
+  line-height: 1.4;
+}
+
+
+/* MESSAGE */
+
+.admin-notification-content > p {
+  margin: 6px 0 0;
+
+  color: #667085;
+
+  font-size: 13px;
+
+  line-height: 1.6;
+
+  max-width: 850px;
+}
+
+
+/* =========================================================
+   UNREAD DOT
+========================================================= */
+
+.admin-unread-dot {
+  width: 9px;
+  height: 9px;
+
+  flex-shrink: 0;
+
+  margin-top: 8px;
+
+  border-radius: 50%;
+
+  background: #2563eb;
+
+  box-shadow:
+    0 0 0 3px #dbeafe;
+}
+
+
+/* =========================================================
+   NOTIFICATION META
+========================================================= */
+
+.admin-notification-meta {
+  display: flex;
+
+  align-items: center;
+
+  flex-wrap: wrap;
+
+  gap: 10px;
+
+  margin-top: 10px;
+}
+
+.admin-notification-meta span {
+  color: #98a2b3;
+
+  font-size: 11px;
+
+  font-weight: 500;
+}
+
+.admin-notification-meta span + span {
+  position: relative;
+
+  padding-left: 11px;
+}
+
+.admin-notification-meta span + span::before {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  top: 50%;
+
+  width: 3px;
+  height: 3px;
+
+  border-radius: 50%;
+
+  background: #cbd5e1;
+
+  transform: translateY(-50%);
+}
+
+
+/* =========================================================
+   DELETE BUTTON
+========================================================= */
+
+.admin-delete-notification-btn {
+  width: 32px;
+  height: 32px;
+
+  flex-shrink: 0;
+
+  border: 1px solid transparent;
+
+  background: transparent;
+
+  color: #98a2b3;
+
+  border-radius: 8px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  font-size: 21px;
+
+  line-height: 1;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+.admin-delete-notification-btn:hover {
+  background: #fef2f2;
+
+  border-color: #fecaca;
+
+  color: #dc2626;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.admin-footer {
+  background: #111827;
+
+  color: #ffffff;
+
+  padding: 28px 48px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 20px;
+
+  border-top: 1px solid #1f2937;
+}
+
+.admin-footer-brand {
+  font-size: 18px;
+
+  font-weight: 800;
+}
+
+.admin-footer-text {
+  color: #cbd5e1;
+
+  font-size: 13px;
+}
+
+.admin-footer-copy {
+  color: #94a3b8;
+
+  font-size: 12px;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1000px) {
+
+  .admin-navbar {
+    padding: 0 25px;
+  }
+
+  .admin-navbar-actions {
+    gap: 3px;
+  }
+
+  .admin-nav-btn {
+    padding: 9px 10px;
+  }
+
+  .admin-notifications-main {
+    width: min(100% - 40px, 900px);
+  }
+
+  .admin-notification-stats {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .admin-notification-item {
+    align-items: flex-start;
+  }
+
+  .admin-footer {
+    padding: 25px;
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+
+  /* NAVBAR */
+
+  .admin-navbar {
+    height: auto;
+
+    padding: 15px 18px;
+
+    flex-direction: column;
+
+    align-items: stretch;
+
+    gap: 13px;
+
+    position: relative;
+  }
+
+  .admin-navbar-brand {
+    text-align: center;
+  }
+
+  .admin-navbar-actions {
+    width: 100%;
+
+    display: flex;
+
+    overflow-x: auto;
+
+    padding-bottom: 3px;
+
+    justify-content: flex-start;
+  }
+
+  .admin-nav-btn,
+  .admin-logout-btn {
+    flex-shrink: 0;
+
+    font-size: 12px;
+
+    padding: 8px 11px;
+  }
+
+  .admin-logout-btn {
+    margin-left: 0;
+  }
+
+
+  /* MAIN */
+
+  .admin-notifications-main {
+    width: calc(100% - 24px);
+
+    padding: 25px 0 45px;
+  }
+
+
+  /* HEADER */
+
+  .admin-notifications-header {
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    padding: 24px 20px;
+
+    border-radius: 14px;
+  }
+
+  .admin-notifications-header h1 {
+    font-size: 24px;
+  }
+
+  .admin-notifications-header-badge {
+    align-self: flex-start;
+  }
+
+
+  /* STATS */
+
+  .admin-notification-stats {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 10px;
+  }
+
+  .admin-notification-stat-card {
+    min-height: 110px;
+
+    padding: 15px;
+
+    gap: 11px;
+  }
+
+  .admin-notification-stat-icon {
+    width: 42px;
+    height: 42px;
+
+    font-size: 19px;
+  }
+
+  .admin-notification-stat-card span {
+    font-size: 11px;
+  }
+
+  .admin-notification-stat-card strong {
+    font-size: 23px;
+  }
+
+
+  /* CARD */
+
+  .admin-notifications-card {
+    padding: 20px;
+
+    border-radius: 14px;
+  }
+
+
+  /* CARD HEADER */
+
+  .admin-notifications-card-header {
+    flex-direction: column;
+
+    align-items: flex-start;
+  }
+
+  .admin-mark-all-btn {
+    width: 100%;
+  }
+
+
+  /* NOTIFICATION ITEM */
+
+  .admin-notification-item {
+    gap: 12px;
+
+    padding: 16px;
+  }
+
+  .admin-notification-icon {
+    width: 42px;
+    height: 42px;
+
+    font-size: 18px;
+
+    border-radius: 10px;
+  }
+
+
+  /* TITLE */
+
+  .admin-notification-content h3 {
+    font-size: 14px;
+  }
+
+  .admin-notification-content > p {
+    font-size: 12px;
+  }
+
+
+  /* DELETE */
+
+  .admin-delete-notification-btn {
+    width: 29px;
+    height: 29px;
+
+    font-size: 19px;
+  }
+
+
+  /* FOOTER */
+
+  .admin-footer {
+    flex-direction: column;
+
+    text-align: center;
+
+    padding: 28px 18px;
+
+    gap: 9px;
+  }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 420px) {
+
+  .admin-notification-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-notifications-header h1 {
+    font-size: 22px;
+  }
+
+  .admin-page-label {
+    font-size: 11px;
+  }
+
+  .admin-notification-stat-card {
+    min-height: 95px;
+  }
+
+  .admin-notification-item {
+    display: grid;
+
+    grid-template-columns:
+      42px 1fr 29px;
+
+    gap: 10px;
+  }
+
+  .admin-notification-title-row {
+    gap: 6px;
+  }
+
+  .admin-notification-type {
+    font-size: 9px;
+  }
+
+  .admin-notification-meta {
+    gap: 6px;
+  }
+
+  .admin-notification-meta span {
+    font-size: 10px;
+  }
+}
