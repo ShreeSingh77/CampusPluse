@@ -1,215 +1,999 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
+import { useAuth } from "../../context/AuthContext";
 import api from "../../services/api";
 import "./MyComplaints.css";
 
 const MyComplaints = () => {
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
 
   const [complaints, setComplaints] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [error, setError] = useState("");
 
-  useEffect(() => {
-    const fetchComplaints = async () => {
-      try {
-        const response = await api.get("/complaints/my");
+  const [menuOpen, setMenuOpen] = useState(false);
 
-        setComplaints(response.data.complaints || []);
-      } catch (error) {
-        console.error("Fetch complaints error:", error);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [priorityFilter, setPriorityFilter] = useState("all");
+  const [sortOrder, setSortOrder] = useState("newest");
 
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  // =====================================================
+  // FETCH COMPLAINTS
+  // =====================================================
+
+  const fetchComplaints = async (showRefresh = false) => {
+    try {
+      if (showRefresh) {
+        setRefreshing(true);
+      } else {
+        setLoading(true);
+      }
+
+      setError("");
+
+      const response = await api.get("/complaints/my");
+
+      setComplaints(response.data.complaints || []);
+    } catch (error) {
+      console.error("Fetch complaints error:", error);
+
+      setError(
+        error.response?.data?.message ||
+          "Failed to load your complaints."
+      );
+
+      if (showRefresh) {
         toast.error(
           error.response?.data?.message ||
-            "Failed to load complaints"
+            "Failed to refresh complaints"
         );
-      } finally {
-        setLoading(false);
       }
-    };
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
 
+  // =====================================================
+  // FETCH NOTIFICATION COUNT
+  // =====================================================
+
+  const fetchNotificationCount = async () => {
+    try {
+      const response = await api.get("/notifications");
+
+      const notifications =
+        response.data.notifications || [];
+
+      const unread = notifications.filter(
+        (notification) => !notification.isRead
+      ).length;
+
+      setUnreadCount(unread);
+    } catch (error) {
+      console.error(
+        "Notification count error:",
+        error
+      );
+    }
+  };
+
+  // =====================================================
+  // INITIAL LOAD
+  // =====================================================
+
+  useEffect(() => {
     fetchComplaints();
+    fetchNotificationCount();
   }, []);
 
+  // =====================================================
+  // FORMAT HELPERS
+  // =====================================================
+
   const formatStatus = (status) => {
+    if (!status) return "Unknown";
+
     return status
-      ?.replace(/_/g, " ")
-      .replace(/\b\w/g, (char) => char.toUpperCase());
+      .replace(/_/g, " ")
+      .replace(/\b\w/g, (char) =>
+        char.toUpperCase()
+      );
   };
 
   const formatPriority = (priority) => {
-    return priority
-      ?.replace(/\b\w/g, (char) => char.toUpperCase());
+    if (!priority) return "Unknown";
+
+    return priority.replace(
+      /\b\w/g,
+      (char) => char.toUpperCase()
+    );
   };
 
   const formatDate = (date) => {
     if (!date) return "N/A";
 
-    return new Date(date).toLocaleDateString("en-IN", {
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-    });
+    return new Date(date).toLocaleDateString(
+      "en-IN",
+      {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      }
+    );
   };
+
+  const formatDateTime = (date) => {
+    if (!date) return "N/A";
+
+    return new Date(date).toLocaleString(
+      "en-IN",
+      {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      }
+    );
+  };
+
+  // =====================================================
+  // FILTER + SEARCH + SORT
+  // =====================================================
+
+  const filteredComplaints = useMemo(() => {
+    let result = [...complaints];
+
+    // SEARCH
+    if (searchTerm.trim()) {
+      const search = searchTerm
+        .trim()
+        .toLowerCase();
+
+      result = result.filter((complaint) => {
+        const title =
+          complaint.title?.toLowerCase() || "";
+
+        const description =
+          complaint.description?.toLowerCase() || "";
+
+        const location =
+          complaint.location?.toLowerCase() || "";
+
+        const category =
+          complaint.category?.toLowerCase() || "";
+
+        return (
+          title.includes(search) ||
+          description.includes(search) ||
+          location.includes(search) ||
+          category.includes(search)
+        );
+      });
+    }
+
+    // STATUS FILTER
+    if (statusFilter !== "all") {
+      result = result.filter(
+        (complaint) =>
+          complaint.status === statusFilter
+      );
+    }
+
+    // PRIORITY FILTER
+    if (priorityFilter !== "all") {
+      result = result.filter(
+        (complaint) =>
+          complaint.priority === priorityFilter
+      );
+    }
+
+    // SORT
+    result.sort((a, b) => {
+      const dateA = new Date(
+        a.createdAt || 0
+      ).getTime();
+
+      const dateB = new Date(
+        b.createdAt || 0
+      ).getTime();
+
+      if (sortOrder === "oldest") {
+        return dateA - dateB;
+      }
+
+      return dateB - dateA;
+    });
+
+    return result;
+  }, [
+    complaints,
+    searchTerm,
+    statusFilter,
+    priorityFilter,
+    sortOrder,
+  ]);
+
+  // =====================================================
+  // STATISTICS
+  // =====================================================
+
+  const totalComplaints = complaints.length;
+
+  const activeComplaints = complaints.filter(
+    (complaint) =>
+      !["resolved", "rejected"].includes(
+        complaint.status
+      )
+  ).length;
+
+  const resolvedComplaints = complaints.filter(
+    (complaint) =>
+      complaint.status === "resolved"
+  ).length;
+
+  const urgentComplaints = complaints.filter(
+    (complaint) =>
+      complaint.priority === "urgent"
+  ).length;
+
+  // =====================================================
+  // CLEAR FILTERS
+  // =====================================================
+
+  const clearFilters = () => {
+    setSearchTerm("");
+    setStatusFilter("all");
+    setPriorityFilter("all");
+    setSortOrder("newest");
+  };
+
+  const hasActiveFilters =
+    searchTerm.trim() !== "" ||
+    statusFilter !== "all" ||
+    priorityFilter !== "all" ||
+    sortOrder !== "newest";
+
+  // =====================================================
+  // NAVIGATION
+  // =====================================================
+
+  const goTo = (path) => {
+    setMenuOpen(false);
+    navigate(path);
+  };
+
+  // =====================================================
+  // RENDER
+  // =====================================================
 
   return (
     <div className="my-complaints-page">
 
-      {/* HEADER */}
+      {/* =================================================
+          NAVBAR
+      ================================================= */}
 
-      <div className="my-complaints-header">
+      <nav className="complaints-navbar">
 
-        <button
-          className="back-button"
+        {/* BRAND */}
+
+        <div
+          className="complaints-navbar-brand"
           onClick={() =>
-            navigate("/student/dashboard")
+            goTo("/student/dashboard")
           }
         >
-          ← Back to Dashboard
-        </button>
+          CampusPulse
+        </div>
 
-        <p className="page-label">
-          Student Dashboard
-        </p>
+        {/* DESKTOP NAVIGATION */}
 
-        <h1>My Complaints</h1>
+        <div className="complaints-navigation">
 
-        <p className="page-description">
-          View and track all the complaints you have
-          submitted.
-        </p>
+          <button
+            className="complaints-nav-link"
+            onClick={() =>
+              goTo("/student/dashboard")
+            }
+          >
+            Dashboard
+          </button>
 
-      </div>
+          <button
+            className="complaints-nav-link active"
+            onClick={() =>
+              goTo("/student/complaints")
+            }
+          >
+            My Complaints
+          </button>
 
+          <button
+            className="complaints-nav-link"
+            onClick={() =>
+              goTo("/student/notifications")
+            }
+          >
+            Notifications
 
-      {/* CONTENT */}
+            {unreadCount > 0 && (
+              <span className="complaints-nav-badge">
+                {unreadCount}
+              </span>
+            )}
+          </button>
 
-      <div className="my-complaints-card">
+          <button
+            className="complaints-nav-link"
+            onClick={() =>
+              goTo("/student/profile")
+            }
+          >
+            Profile
+          </button>
 
-        {loading ? (
+        </div>
 
-          <div className="complaints-loading">
-            <div className="loading-icon">⏳</div>
+        {/* USER */}
 
-            <h3>Loading complaints...</h3>
+        <div className="complaints-user">
 
-            <p>
-              Please wait while we fetch your complaints.
-            </p>
+          <span className="complaints-user-name">
+            {user?.name || "Student"}
+          </span>
+
+          <div className="complaints-user-avatar">
+            {user?.name
+              ?.charAt(0)
+              .toUpperCase() || "S"}
           </div>
 
-        ) : complaints.length === 0 ? (
+          {/* DESKTOP LOGOUT */}
 
-          <div className="complaints-empty">
+          <button
+            className="complaints-logout"
+            onClick={logout}
+          >
+            Logout
+          </button>
 
-            <div className="empty-icon">
-              📋
-            </div>
+          {/* MOBILE HAMBURGER */}
 
-            <h3>No complaints yet</h3>
+          <button
+            className={`complaints-hamburger ${
+              menuOpen
+                ? "hamburger-active"
+                : ""
+            }`}
+            onClick={() =>
+              setMenuOpen(!menuOpen)
+            }
+            aria-label="Open navigation menu"
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
 
-            <p>
-              You haven't submitted any complaints.
+        </div>
+
+        {/* MOBILE MENU */}
+
+        {menuOpen && (
+          <div className="complaints-mobile-navigation">
+
+            <button
+              className="complaints-mobile-nav-link"
+              onClick={() =>
+                goTo("/student/dashboard")
+              }
+            >
+              Dashboard
+            </button>
+
+            <button
+              className="complaints-mobile-nav-link active"
+              onClick={() =>
+                setMenuOpen(false)
+              }
+            >
+              My Complaints
+            </button>
+
+            <button
+              className="complaints-mobile-nav-link"
+              onClick={() =>
+                goTo("/student/notifications")
+              }
+            >
+              <span>Notifications</span>
+
+              {unreadCount > 0 && (
+                <span className="complaints-nav-badge">
+                  {unreadCount}
+                </span>
+              )}
+            </button>
+
+            <button
+              className="complaints-mobile-nav-link"
+              onClick={() =>
+                goTo("/student/profile")
+              }
+            >
+              Profile
+            </button>
+
+            <button
+              className="complaints-mobile-logout"
+              onClick={() => {
+                setMenuOpen(false);
+                logout();
+              }}
+            >
+              Logout
+            </button>
+
+          </div>
+        )}
+
+      </nav>
+
+      {/* =================================================
+          MAIN
+      ================================================= */}
+
+      <main className="my-complaints-main">
+
+        {/* HEADER */}
+
+        <section className="my-complaints-header">
+
+          <div className="header-left">
+
+            <button
+              className="back-button"
+              onClick={() =>
+                navigate("/student/dashboard")
+              }
+            >
+              ← Back to Dashboard
+            </button>
+
+            <p className="page-label">
+              Student Dashboard
             </p>
+
+            <h1>My Complaints</h1>
+
+            <p className="page-description">
+              View, track and manage all the
+              complaints you have submitted.
+            </p>
+
+          </div>
+
+          <div className="header-actions">
+
+            <button
+              className="refresh-button"
+              onClick={() =>
+                fetchComplaints(true)
+              }
+              disabled={refreshing}
+            >
+              {refreshing
+                ? "↻ Refreshing..."
+                : "↻ Refresh"}
+            </button>
 
             <button
               className="new-complaint-button"
               onClick={() =>
-                navigate("/student/complaints/new")
+                navigate(
+                  "/student/complaints/new"
+                )
               }
             >
-              + Submit New Complaint
+              + New Complaint
             </button>
 
           </div>
 
-        ) : (
+        </section>
 
-          <div className="complaints-list">
+        {/* =================================================
+            STATISTICS
+        ================================================= */}
 
-            {complaints.map((complaint) => (
+        {!loading && !error && (
+          <section className="complaint-stats">
 
-              <div
-                className="my-complaint-item"
-                key={complaint._id}
+            <div className="stat-card">
+              <div className="stat-icon">
+                📋
+              </div>
+
+              <div>
+                <span>Total Complaints</span>
+                <strong>
+                  {totalComplaints}
+                </strong>
+              </div>
+            </div>
+
+            <div className="stat-card">
+              <div className="stat-icon active-icon">
+                🔄
+              </div>
+
+              <div>
+                <span>Active</span>
+                <strong>
+                  {activeComplaints}
+                </strong>
+              </div>
+            </div>
+
+            <div className="stat-card">
+              <div className="stat-icon resolved-icon">
+                ✓
+              </div>
+
+              <div>
+                <span>Resolved</span>
+                <strong>
+                  {resolvedComplaints}
+                </strong>
+              </div>
+            </div>
+
+            <div className="stat-card">
+              <div className="stat-icon urgent-icon">
+                🚨
+              </div>
+
+              <div>
+                <span>Urgent</span>
+                <strong>
+                  {urgentComplaints}
+                </strong>
+              </div>
+            </div>
+
+          </section>
+        )}
+
+        {/* =================================================
+            CONTENT CARD
+        ================================================= */}
+
+        <section className="my-complaints-card">
+
+          {/* ERROR */}
+
+          {error && !loading ? (
+            <div className="complaints-error">
+
+              <div className="error-icon">
+                ⚠️
+              </div>
+
+              <h3>
+                Unable to load complaints
+              </h3>
+
+              <p>{error}</p>
+
+              <button
+                className="retry-button"
+                onClick={() =>
+                  fetchComplaints()
+                }
               >
+                Try Again
+              </button>
 
-                {/* MAIN CONTENT */}
+            </div>
+          ) : loading ? (
 
-                <div className="complaint-main">
+            /* LOADING */
 
-                  <div className="complaint-title-row">
+            <div className="complaints-loading">
 
-                    <h3>
-                      {complaint.title}
-                    </h3>
+              <div className="loading-spinner"></div>
 
-                    <span
-                      className={`complaint-status ${complaint.status}`}
-                    >
-                      {formatStatus(complaint.status)}
-                    </span>
+              <h3>
+                Loading complaints...
+              </h3>
 
-                  </div>
+              <p>
+                Please wait while we fetch
+                your complaints.
+              </p>
 
-                  <p className="complaint-description">
-                    {complaint.description}
-                  </p>
+            </div>
+          ) : (
 
-                  <div className="complaint-details">
+            <>
+              {/* =================================================
+                  FILTER TOOLBAR
+              ================================================= */}
 
-                    <span>
-                      📍 {complaint.location}
-                    </span>
+              <div className="complaints-toolbar">
 
-                    <span>
-                      📂 {formatStatus(complaint.category)}
-                    </span>
+                <div className="toolbar-heading">
 
-                    <span>
-                      📅 {formatDate(complaint.createdAt)}
-                    </span>
+                  <div>
+                    <h2>
+                      Complaint History
+                    </h2>
 
+                    <p>
+                      {filteredComplaints.length} of{" "}
+                      {complaints.length} complaints
+                      showing
+                    </p>
                   </div>
 
                 </div>
 
+                {/* SEARCH */}
 
-                {/* RIGHT SIDE */}
+                <div className="complaint-search">
 
-                <div className="complaint-side">
-
-                  <span
-                    className={`complaint-priority ${complaint.priority}`}
-                  >
-                    {formatPriority(complaint.priority)}
+                  <span className="search-icon">
+                    🔍
                   </span>
 
-                  <div className="complaint-date">
-  Submitted on{" "}
-  {formatDate(complaint.createdAt)}
-</div>
+                  <input
+                    type="text"
+                    value={searchTerm}
+                    onChange={(event) =>
+                      setSearchTerm(
+                        event.target.value
+                      )
+                    }
+                    placeholder="Search complaints..."
+                  />
 
-<button
-  className="view-details-btn"
-  onClick={() =>
-    navigate(`/student/complaints/${complaint._id}`)
-  }
->
-  View Details →
-</button>
+                  {searchTerm && (
+                    <button
+                      className="clear-search"
+                      onClick={() =>
+                        setSearchTerm("")
+                      }
+                    >
+                      ×
+                    </button>
+                  )}
+
+                </div>
+
+                {/* FILTERS */}
+
+                <div className="complaint-filters">
+
+                  <select
+                    value={statusFilter}
+                    onChange={(event) =>
+                      setStatusFilter(
+                        event.target.value
+                      )
+                    }
+                  >
+                    <option value="all">
+                      All Status
+                    </option>
+
+                    <option value="submitted">
+                      Submitted
+                    </option>
+
+                    <option value="under_review">
+                      Under Review
+                    </option>
+
+                    <option value="assigned">
+                      Assigned
+                    </option>
+
+                    <option value="in_progress">
+                      In Progress
+                    </option>
+
+                    <option value="resolved">
+                      Resolved
+                    </option>
+
+                    <option value="rejected">
+                      Rejected
+                    </option>
+                  </select>
+
+                  <select
+                    value={priorityFilter}
+                    onChange={(event) =>
+                      setPriorityFilter(
+                        event.target.value
+                      )
+                    }
+                  >
+                    <option value="all">
+                      All Priority
+                    </option>
+
+                    <option value="low">
+                      Low
+                    </option>
+
+                    <option value="medium">
+                      Medium
+                    </option>
+
+                    <option value="high">
+                      High
+                    </option>
+
+                    <option value="urgent">
+                      Urgent
+                    </option>
+                  </select>
+
+                  <select
+                    value={sortOrder}
+                    onChange={(event) =>
+                      setSortOrder(
+                        event.target.value
+                      )
+                    }
+                  >
+                    <option value="newest">
+                      Newest First
+                    </option>
+
+                    <option value="oldest">
+                      Oldest First
+                    </option>
+                  </select>
+
+                  {hasActiveFilters && (
+                    <button
+                      className="clear-filters-button"
+                      onClick={clearFilters}
+                    >
+                      Clear
+                    </button>
+                  )}
 
                 </div>
 
               </div>
 
-            ))}
+              {/* =================================================
+                  EMPTY RESULT
+              ================================================= */}
 
+              {complaints.length === 0 ? (
+
+                <div className="complaints-empty">
+
+                  <div className="empty-icon">
+                    📋
+                  </div>
+
+                  <h3>
+                    No complaints yet
+                  </h3>
+
+                  <p>
+                    You haven't submitted any
+                    complaints.
+                  </p>
+
+                  <button
+                    className="new-complaint-button"
+                    onClick={() =>
+                      navigate(
+                        "/student/complaints/new"
+                      )
+                    }
+                  >
+                    + Submit New Complaint
+                  </button>
+
+                </div>
+
+              ) : filteredComplaints.length ===
+                0 ? (
+
+                <div className="no-results">
+
+                  <div className="no-results-icon">
+                    🔎
+                  </div>
+
+                  <h3>
+                    No matching complaints
+                  </h3>
+
+                  <p>
+                    Try changing your search or
+                    filter options.
+                  </p>
+
+                  <button
+                    className="clear-filters-button large"
+                    onClick={clearFilters}
+                  >
+                    Clear All Filters
+                  </button>
+
+                </div>
+
+              ) : (
+
+                /* =================================================
+                    COMPLAINT LIST
+                ================================================= */
+
+                <div className="complaints-list">
+
+                  {filteredComplaints.map(
+                    (complaint) => (
+
+                      <article
+                        className="my-complaint-item"
+                        key={complaint._id}
+                      >
+
+                        {/* MAIN */}
+
+                        <div className="complaint-main">
+
+                          <div className="complaint-title-row">
+
+                            <h3>
+                              {complaint.title ||
+                                "Untitled Complaint"}
+                            </h3>
+
+                            <span
+                              className={`complaint-status ${
+                                complaint.status ||
+                                "unknown"
+                              }`}
+                            >
+                              {formatStatus(
+                                complaint.status
+                              )}
+                            </span>
+
+                          </div>
+
+                          <p className="complaint-description">
+                            {complaint.description ||
+                              "No description available."}
+                          </p>
+
+                          <div className="complaint-details">
+
+                            <span>
+                              📍{" "}
+                              {complaint.location ||
+                                "Location not specified"}
+                            </span>
+
+                            <span>
+                              📂{" "}
+                              {formatStatus(
+                                complaint.category
+                              )}
+                            </span>
+
+                            <span>
+                              📅{" "}
+                              {formatDate(
+                                complaint.createdAt
+                              )}
+                            </span>
+
+                          </div>
+
+                        </div>
+
+                        {/* SIDE */}
+
+                        <div className="complaint-side">
+
+                          <div className="complaint-badges">
+
+                            <span
+                              className={`complaint-priority ${
+                                complaint.priority ||
+                                "unknown"
+                              }`}
+                            >
+                              {formatPriority(
+                                complaint.priority
+                              )}
+                            </span>
+
+                          </div>
+
+                          <div className="complaint-date">
+
+                            <span>
+                              Submitted
+                            </span>
+
+                            <strong>
+                              {formatDateTime(
+                                complaint.createdAt
+                              )}
+                            </strong>
+
+                          </div>
+
+                          <button
+                            className="view-details-btn"
+                            onClick={() =>
+                              navigate(
+                                `/student/complaints/${complaint._id}`
+                              )
+                            }
+                          >
+                            View Details →
+                          </button>
+
+                        </div>
+
+                      </article>
+                    )
+                  )}
+
+                </div>
+              )}
+            </>
+          )}
+
+        </section>
+
+      </main>
+
+      {/* =================================================
+          FOOTER
+      ================================================= */}
+
+      <footer className="student-complaints-footer">
+
+        <div className="student-complaints-footer-content">
+
+          <div className="footer-brand">
+            CampusPulse
           </div>
 
-        )}
+          <p>
+            Smart Campus Complaint Management
+            System
+          </p>
 
-      </div>
+          <span>
+            © {new Date().getFullYear()} CampusPulse.
+            All rights reserved.
+          </span>
+
+        </div>
+
+      </footer>
 
     </div>
   );
